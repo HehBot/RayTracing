@@ -7,8 +7,15 @@
 #include "vec3.h"
 
 #include <cmath>
+#include <fstream>
 #include <iostream>
+#include <nlohmann/json.hpp>
+#include <stdexcept>
 #include <vector>
+
+using json = nlohmann::json;
+
+static color background_color;
 
 color ray_color(ray const& r, hittable const& world, int depth)
 {
@@ -23,40 +30,58 @@ color ray_color(ray const& r, hittable const& world, int depth)
             return attenuation * ray_color(scattered, world, depth - 1);
         return color(0.0, 0.0, 0.0);
     }
-    double t = 0.5 * r.direction.y / r.direction.length() + 0.5;
-    color c = color(1.0, 1.0, 1.0) * (1.0 - t) + color(0.5, 0.7, 1.0) * t;
-    return c;
+    return background_color;
 }
 
 int main(int argc, char* argv[])
 {
-    if (argc != 2) {
-        std::cerr << "Usage: " << argv[0] << " <output_file>\n";
+    if (argc != 3) {
+        std::cerr << "Usage: " << argv[0] << " <scene_json> <output_file>\n";
         return 0;
     }
 
+    json scene_spec = json::parse(std::ifstream(argv[1]));
+
     // image
-    double aspect_ratio = 16.0 / 9.0;
-    int img_width = 400;
+    json& image_spec = scene_spec["image"];
+    double aspect_ratio = image_spec["aspect_ratio"];
+    int img_width = image_spec["width"];
     int img_height = (int)(img_width / aspect_ratio);
-    int samples_per_pixel = 100;
-    int max_depth = 50;
+    int samples_per_pixel = image_spec["samples_per_pixel"];
+    int max_depth = image_spec["max_depth"];
 
     // world
-    hittable_list world;
-    auto material_ground = std::make_shared<lambertian>(color(0.8, 0.8, 0.0));
-    auto material_center = std::make_shared<lambertian>(color(0.1, 0.2, 0.5));
-    auto material_left = std::make_shared<dielectric>(1.5);
-    auto material_right = std::make_shared<metal>(color(0.8, 0.6, 0.2), 0.0);
+    auto bc = scene_spec["geometry"]["background_color"];
+    background_color = color(bc[0], bc[1], bc[2]);
 
-    world.add(std::make_shared<sphere>(pos3(0.0, -100.5, -1.0), 100.0, material_ground));
-    world.add(std::make_shared<sphere>(pos3(0.0, 0.0, -1.0), 0.5, material_center));
-    world.add(std::make_shared<sphere>(pos3(-1.0, 0.0, -1.0), 0.5, material_left));
-    world.add(std::make_shared<sphere>(pos3(-1.0, 0.0, -1.0), -0.45, material_left));
-    world.add(std::make_shared<sphere>(pos3(1.0, 0.0, -1.0), 0.5, material_right));
+    hittable_list world;
+
+    for (auto z : scene_spec["geometry"]["objects"]) {
+        json& material_spec = z["material"];
+        std::shared_ptr<material> mat;
+        std::shared_ptr<hittable> obj;
+        if (material_spec["type"] == "lambertian") {
+            auto al = material_spec["albedo"];
+            mat = std::make_shared<lambertian>(color(al[0], al[1], al[2]));
+        } else if (material_spec["type"] == "metal") {
+            auto al = material_spec["albedo"];
+            mat = std::make_shared<metal>(color(al[0], al[1], al[2]), material_spec["fuzz"]);
+        } else if (material_spec["type"] == "dielectric") {
+            mat = std::make_shared<dielectric>(material_spec["ir"]);
+        } else
+            throw std::invalid_argument("Invalid material");
+        if (z["type"] == "sphere") {
+            auto pos = z["position"];
+            obj = std::make_shared<sphere>(pos3(pos[0], pos[1], pos[2]), z["radius"], mat);
+        } else
+            throw std::invalid_argument("Invalid object");
+        world.add(obj);
+    }
 
     // camera
-    camera cam(pos3(3, 3, 2), pos3(0, 0, -1), vec3(0, 1, 0), 20, aspect_ratio, 2.0, 5.2);
+    json& camera_spec = scene_spec["camera"];
+    auto look_from = camera_spec["look_from"], look_at = camera_spec["look_at"], vup = camera_spec["vup"];
+    camera cam(pos3(look_from[0], look_from[1], look_from[2]), pos3(look_at[0], look_at[1], look_at[2]), vec3(vup[0], vup[1], vup[2]), camera_spec["fov"], aspect_ratio, camera_spec["aperture"], camera_spec["focal_distance"]);
 
     std::vector<color> image(img_width * img_height, { 0.0, 0.0, 0.0 });
     for (int j = 0; j < img_height; ++j) {
@@ -71,6 +96,6 @@ int main(int argc, char* argv[])
         }
     }
 
-    write_to_img_file(argv[1], img_format::PPM, img_width, img_height, image);
+    write_to_img_file(argv[2], img_format::PPM, img_width, img_height, image);
     return 0;
 }

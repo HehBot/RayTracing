@@ -1,4 +1,6 @@
 build/*
-samples/*
 bin/*
 *.ppm
+*.json
+!samples/*.ppm
+!samples/*.json

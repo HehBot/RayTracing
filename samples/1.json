@@ -1,0 +1,133 @@
+{
+    "image": {
+        "width": 400,
+        "aspect_ratio": 1.7778,
+        "samples_per_pixel": 100,
+        "max_depth": 50
+    },
+    "geometry": {
+        "objects": [
+            {
+                "type": "sphere",
+                "radius": 100.0,
+                "position": [
+                    0.0,
+                    -100.5,
+                    -1.0
+                ],
+                "material": {
+                    "type": "lambertian",
+                    "albedo": [
+                        0.8,
+                        0.8,
+                        0.0
+                    ]
+                }
+            },
+            {
+                "type": "sphere",
+                "radius": 100.0,
+                "position": [
+                    0.0,
+                    -100.5,
+                    -1.0
+                ],
+                "material": {
+                    "type": "lambertian",
+                    "albedo": [
+                        0.8,
+                        0.8,
+                        0.0
+                    ]
+                }
+            },
+            {
+                "type": "sphere",
+                "radius": 0.5,
+                "position": [
+                    0.0,
+                    0.0,
+                    -1.0
+                ],
+                "material": {
+                    "type": "lambertian",
+                    "albedo": [
+                        0.1,
+                        0.2,
+                        0.5
+                    ]
+                }
+            },
+            {
+                "type": "sphere",
+                "radius": 0.5,
+                "position": [
+                    -1.0,
+                    0.0,
+                    -1.0
+                ],
+                "material": {
+                    "type": "dielectric",
+                    "ir": 1.5
+                }
+            },
+            {
+                "type": "sphere",
+                "radius": -0.45,
+                "position": [
+                    -1.0,
+                    0.0,
+                    -1.0
+                ],
+                "material": {
+                    "type": "dielectric",
+                    "ir": 1.5
+                }
+            },
+            {
+                "type": "sphere",
+                "radius": 0.5,
+                "position": [
+                    1.0,
+                    0.0,
+                    -1.0
+                ],
+                "material": {
+                    "type": "metal",
+                    "albedo": [
+                        0.8,
+                        0.8,
+                        0.0
+                    ],
+                    "fuzz": 0.0
+                }
+            }
+        ],
+        "background_color": [
+            1.0,
+            1.0,
+            1.0
+        ]
+    },
+    "camera": {
+        "type": "ThinLens",
+        "look_from": [
+            3.0,
+            3.0,
+            2.0
+        ],
+        "look_at": [
+            0.0,
+            0.0,
+            -1.0
+        ],
+        "vup": [
+            0.0,
+            1.0,
+            0.0
+        ],
+        "fov": 20.0,
+        "aperture": 2.0,
+        "focal_distance": 5.2
+    }
+}
