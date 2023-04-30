@@ -52,11 +52,11 @@ int main(int argc, char* argv[])
     world.add(std::make_shared<sphere>(pos3(0.0, -100.5, -1.0), 100.0, material_ground));
     world.add(std::make_shared<sphere>(pos3(0.0, 0.0, -1.0), 0.5, material_center));
     world.add(std::make_shared<sphere>(pos3(-1.0, 0.0, -1.0), 0.5, material_left));
-    world.add(std::make_shared<sphere>(pos3(-1.0, 0.0, -1.0), -0.4, material_left));
+    world.add(std::make_shared<sphere>(pos3(-1.0, 0.0, -1.0), -0.45, material_left));
     world.add(std::make_shared<sphere>(pos3(1.0, 0.0, -1.0), 0.5, material_right));
 
     // camera
-    camera cam(2.0, aspect_ratio, 1.0);
+    camera cam(pos3(-2, 2, 1), pos3(0, 0, -1), vec3(0, 1, 0), 20, aspect_ratio);
 
     std::vector<color> image(img_width * img_height, { 0.0, 0.0, 0.0 });
     for (int j = 0; j < img_height; ++j) {
