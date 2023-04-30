@@ -56,7 +56,7 @@ int main(int argc, char* argv[])
     world.add(std::make_shared<sphere>(pos3(1.0, 0.0, -1.0), 0.5, material_right));
 
     // camera
-    camera cam(pos3(-2, 2, 1), pos3(0, 0, -1), vec3(0, 1, 0), 20, aspect_ratio);
+    camera cam(pos3(3, 3, 2), pos3(0, 0, -1), vec3(0, 1, 0), 20, aspect_ratio, 2.0, 5.2);
 
     std::vector<color> image(img_width * img_height, { 0.0, 0.0, 0.0 });
     for (int j = 0; j < img_height; ++j) {

@@ -33,6 +33,12 @@ inline vec3 random_vec_in_sphere()
     double r = std::pow(random_double(), 0.33333);
     return r * random_unit_vec();
 }
+inline vec3 random_vec_in_disc()
+{
+    double r = std::pow(random_double(), 0.5);
+    double theta = 2 * pi * random_double();
+    return vec3(r * std::cos(theta), r * std::sin(theta), 0);
+}
 
 inline double clamp(double x, double min, double max)
 {

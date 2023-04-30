@@ -10,8 +10,11 @@ class camera {
     vec3 vertical;
     pos3 lower_left;
 
+    vec3 u, v, w;
+    double lens_radius;
+
 public:
-    camera(pos3 lookfrom, pos3 lookat, vec3 vup, double vfov, double aspect);
+    camera(pos3 lookfrom, pos3 lookat, vec3 vup, double vfov, double aspect, double aperture, double focus_dist);
     ray get_ray(double u, double v) const;
 };
 

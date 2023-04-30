@@ -3,22 +3,26 @@
 #include "misc.h"
 #include "ray.h"
 
-camera::camera(pos3 lookfrom, pos3 lookat, vec3 vup, double vfov, double aspect)
+camera::camera(pos3 lookfrom, pos3 lookat, vec3 vup, double vfov, double aspect, double aperture, double focus_dist)
     : focus(lookfrom)
 {
     double theta = deg_to_rad(vfov);
     double viewport_height = 2 * std::tan(theta / 2);
     double viewport_width = aspect * viewport_height;
 
-    double focal_length = 1.0;
+    w = (lookfrom - lookat).unit_vec();
+    u = cross(vup, w).unit_vec();
+    v = cross(w, u).unit_vec();
 
-    vec3 looking = lookat - lookfrom;
+    horizontal = focus_dist * viewport_width * u;
+    vertical = focus_dist * viewport_height * v;
+    lower_left = focus - horizontal / 2.0 - vertical / 2.0 - focus_dist * w;
 
-    horizontal = viewport_width * cross(looking, vup).unit_vec();
-    vertical = viewport_height * cross(horizontal, looking).unit_vec();
-    lower_left = pos3(focus - horizontal / 2.0 - vertical / 2.0 + focal_length * looking.unit_vec());
+    lens_radius = aperture / 2.0;
 }
-ray camera::get_ray(double u, double v) const
+ray camera::get_ray(double s, double t) const
 {
-    return ray(focus, lower_left + u * horizontal + v * vertical - focus);
+    vec3 rd = lens_radius * random_vec_in_disc();
+    vec3 offset = u * rd.x + v * rd.y;
+    return ray(focus + offset, lower_left + s * horizontal + t * vertical - focus - offset);
 }
