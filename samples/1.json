@@ -5,7 +5,7 @@
         "samples_per_pixel": 100,
         "max_depth": 50
     },
-    "geometry": {
+    "world": {
         "objects": [
             {
                 "type": "sphere",
@@ -95,9 +95,9 @@
                 "material": {
                     "type": "metal",
                     "albedo": [
-                        0.8,
-                        0.8,
-                        0.0
+                        1.0,
+                        1.0,
+                        1.0
                     ],
                     "fuzz": 0.0
                 }
@@ -127,7 +127,7 @@
             0.0
         ],
         "fov": 20.0,
-        "aperture": 2.0,
-        "focal_distance": 5.2
+        "aperture": 0.1,
+        "focal_distance": 5.196
     }
 }

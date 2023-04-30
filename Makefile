@@ -5,7 +5,7 @@ TARGET_NAME := main
 BUILD_DIR := build
 BIN_DIR := bin
 SRC_DIR := src
-EXT_DIR := $(SRC_DIR)/ext
+EXT_DIR := ext
 LIB_DIR :=
 
 TARGET_EXEC = $(BIN_DIR)/$(TARGET_NAME)
