@@ -1,7 +1,9 @@
 #ifndef VEC3_H
 #define VEC3_H
 
+#include <cassert>
 #include <cmath>
+#include <iostream>
 
 class vec3 {
 public:
@@ -60,6 +62,10 @@ public:
     {
         return vec3(x - v.x, y - v.y, z - v.z);
     }
+    vec3 operator*(vec3 const& v) const
+    {
+        return vec3(x * v.x, y * v.y, z * v.z);
+    }
     vec3 operator*(double t) const
     {
         return vec3(x * t, y * t, z * t);
@@ -77,6 +83,11 @@ public:
     {
         return (*this) / length();
     }
+    bool near_zero() const
+    {
+        double constexpr s = 1e-8;
+        return length() < s;
+    }
 };
 
 inline double dot(vec3 const& v1, vec3 const& v2)
@@ -90,6 +101,24 @@ inline vec3 cross(vec3 const& v1, vec3 const& v2)
 inline vec3 operator*(double t, vec3 const& v)
 {
     return v * t;
+}
+
+inline std::ostream& operator<<(std::ostream& o, vec3 const& v)
+{
+    return (o << v.x << ' ' << v.y << ' ' << v.z);
+}
+
+inline vec3 reflect(vec3 const& v, vec3 const& n)
+{
+    return v - 2 * dot(v, n) * n;
+}
+inline vec3 refract(vec3 v_in, vec3 const& n, double mu_i_by_mu_t)
+{
+    //    v_in = v_in.unit_vec();
+    double cos_theta = fmin(dot(-v_in, n), 1.0);
+    vec3 perp = mu_i_by_mu_t * (v_in + cos_theta * n);
+    vec3 parallel = -std::sqrt(1.0 - perp.length_sq()) * n;
+    return parallel + perp;
 }
 
 using color = vec3;

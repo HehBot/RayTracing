@@ -20,16 +20,16 @@ public:
         list.push_back(o);
     }
 
-    virtual bool hit(ray const& r, double t_min, double t_max, hit_record& h) const override
+    virtual bool hit(ray const& r, double t_min, double t_max, hit_record& rec) const override
     {
         bool any_hit = false;
-        h.t = t_max;
+        rec.t = t_max;
 
-        for (auto& p : list) {
-            hit_record h_temp;
-            if (p->hit(r, t_min, h.t, h_temp)) {
+        for (auto const& p : list) {
+            hit_record rec_temp;
+            if (p->hit(r, t_min, rec.t, rec_temp)) {
                 any_hit = true;
-                h = h_temp;
+                rec = rec_temp;
             }
         }
 

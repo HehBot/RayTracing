@@ -7,6 +7,8 @@
 #include <stdexcept>
 #include <vector>
 
+// double constexpr gamma = 2.0;
+
 void write_to_img_file(char const* filename, img_format f, int w, int h, std::vector<color> const& image)
 {
     switch (f) {
@@ -16,9 +18,9 @@ void write_to_img_file(char const* filename, img_format f, int w, int h, std::ve
         std::vector<uint8_t> pixels(3 * w * h, 0);
         for (int j = 0; j < h; ++j) {
             for (int i = 0; i < w; ++i) {
-                pixels[3 * (w * j + i)] = (uint8_t)(255.999 * image[w * (h - 1 - j) + i].x);
-                pixels[3 * (w * j + i) + 1] = (uint8_t)(255.999 * image[w * (h - 1 - j) + i].y);
-                pixels[3 * (w * j + i) + 2] = (uint8_t)(255.999 * image[w * (h - 1 - j) + i].z);
+                pixels[3 * (w * j + i)] = (uint8_t)(255.999 * std::sqrt(image[w * (h - 1 - j) + i].x));
+                pixels[3 * (w * j + i) + 1] = (uint8_t)(255.999 * std::sqrt(image[w * (h - 1 - j) + i].y));
+                pixels[3 * (w * j + i) + 2] = (uint8_t)(255.999 * std::sqrt(image[w * (h - 1 - j) + i].z));
             }
         }
         std::ofstream output_file(filename, std::ios::binary);
