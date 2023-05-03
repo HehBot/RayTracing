@@ -4,3 +4,4 @@ bin/*
 *.json
 !samples/*.ppm
 !samples/*.json
+samples/*.gen*
