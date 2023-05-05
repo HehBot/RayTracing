@@ -4,14 +4,14 @@
 #include "ray.h"
 #include "vec3.h"
 
-sphere::sphere(pos3 const& centre, double radius, std::shared_ptr<material> m)
-    : centre(centre), radius(radius), mat_ptr(m)
+sphere::sphere(pos3 const& position, double radius, std::shared_ptr<material> m)
+    : hittable(position), radius(radius), mat_ptr(m)
 {
 }
 
 bool sphere::hit(ray const& r, double t_min, double t_max, hit_record& rec) const
 {
-    vec3 ac = r.origin - centre;
+    vec3 ac = r.origin - position;
     double A = r.direction.length_sq();
     double B_half = dot(r.direction, ac);
     double C = ac.length_sq() - radius * radius;
@@ -32,7 +32,7 @@ bool sphere::hit(ray const& r, double t_min, double t_max, hit_record& rec) cons
 
     rec.t = root;
     rec.p = r.at(root);
-    vec3 outward_normal = (rec.p - centre) / radius;
+    vec3 outward_normal = (rec.p - position) / radius;
     rec.set_face_normal(r, outward_normal);
     rec.mat_ptr = mat_ptr;
 

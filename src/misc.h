@@ -21,6 +21,10 @@ inline double random_double()
     static std::mt19937 generator;
     return distribution(generator);
 }
+inline double random_double(double a, double b)
+{
+    return a + (b - a) * random_double();
+}
 inline vec3 random_unit_vec()
 {
     double theta = 2 * pi * random_double();

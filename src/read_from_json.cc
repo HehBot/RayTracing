@@ -3,6 +3,8 @@
 #include "camera.h"
 #include "hittable_list.h"
 #include "material.h"
+#include "misc.h"
+#include "moving.h"
 #include "sphere.h"
 
 #include <fstream>
@@ -52,17 +54,35 @@ camera* read_from_json(char const* filename, metadata& m, hittable_list& world)
                 mat = std::make_shared<dielectric>(material_spec["ir"]);
             } else
                 throw std::invalid_argument("Invalid material");
+
+            auto pos = z["position"];
             if (z["type"] == "sphere") {
-                auto pos = z["position"];
                 obj = std::make_shared<sphere>(pos3(pos[0], pos[1], pos[2]), z["radius"], mat);
             } else
                 throw std::invalid_argument("Invalid object");
+
+            if (z.contains("path")) {
+                json& path_spec = z["path"];
+                if (path_spec["type"] == "lerp") {
+                    auto p0 = path_spec["p0"];
+                    auto p1 = path_spec["p1"];
+                    pos3 initial(p0[0], p0[1], p0[2]);
+                    pos3 final(p1[0], p1[1], p1[2]);
+                    double time0 = path_spec["t0"];
+                    double time1 = path_spec["t1"];
+                    auto path = [=](double time) {
+                        return (initial * (time1 - time) + final * (time - time0)) / (time1 - time0);
+                    };
+                    obj = std::make_shared<moving>(obj, path);
+                } else
+                    throw std::invalid_argument("Invalid path");
+            }
             world.add(obj);
         }
     }
 
     json& camera_spec = scene_spec["camera"];
     auto look_from = camera_spec["look_from"], look_at = camera_spec["look_at"], vup = camera_spec["vup"];
-    camera* cam_ptr = new camera(pos3(look_from[0], look_from[1], look_from[2]), pos3(look_at[0], look_at[1], look_at[2]), vec3(vup[0], vup[1], vup[2]), camera_spec["fov"], m.aspect_ratio, camera_spec["aperture"], camera_spec["focal_distance"]);
+    camera* cam_ptr = new camera(pos3(look_from[0], look_from[1], look_from[2]), pos3(look_at[0], look_at[1], look_at[2]), vec3(vup[0], vup[1], vup[2]), camera_spec["fov"], m.aspect_ratio, camera_spec["aperture"], camera_spec["focal_distance"], 0, 1);
     return cam_ptr;
 }

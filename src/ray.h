@@ -6,10 +6,11 @@
 class ray {
 public:
     vec3 origin, direction;
+    double time;
 
     ray() = default;
-    ray(vec3 const& o, vec3 const& d)
-        : origin(o), direction(d)
+    ray(vec3 const& o, vec3 const& d, double tm)
+        : origin(o), direction(d), time(tm)
     {
     }
 

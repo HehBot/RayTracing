@@ -24,6 +24,11 @@ struct hit_record {
 
 class hittable {
 public:
+    pos3 const position;
+    hittable(pos3 p)
+        : position(p)
+    {
+    }
     virtual bool hit(ray const& r, double t_min, double t_max, hit_record& rec) const = 0;
 };
 
