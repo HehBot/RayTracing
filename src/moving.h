@@ -1,6 +1,9 @@
 #ifndef MOVING_H
 #define MOVING_H
 
+#include "aabb.h"
+#include "hittable.h"
+#include "ray.h"
 #include "vec3.h"
 
 #include <functional>
@@ -11,21 +14,10 @@ class moving : public hittable {
     std::function<pos3(double)> path; // position at time t is position + path(t)
 
 public:
-    moving(std::shared_ptr<hittable> p, std::function<pos3(double)> path_func)
-        : hittable(p->position), ptr(p), path(path_func)
-    {
-    }
+    moving(std::shared_ptr<hittable> p, std::function<pos3(double)> path_func);
 
-    bool hit(ray const& r, double t_min, double t_max, hit_record& rec) const override
-    {
-        vec3 offset = path(r.time);
-        ray moved_r(r.origin - offset, r.direction, r.time);
-        if (!ptr->hit(moved_r, t_min, t_max, rec))
-            return false;
-        rec.p += offset;
-        rec.set_face_normal(moved_r, rec.normal);
-        return true;
-    }
+    virtual bool hit(ray const& r, double t_min, double t_max, hit_record& rec) const override;
+    virtual bool bounding_box(double time0, double time1, aabb& output_box) const override;
 };
 
 #endif // MOVING_H

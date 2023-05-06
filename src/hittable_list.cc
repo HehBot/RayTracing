@@ -1,6 +1,8 @@
 #include "hittable_list.h"
 
+#include "aabb.h"
 #include "ray.h"
+#include "vec3.h"
 
 #include <memory>
 
@@ -31,4 +33,22 @@ bool hittable_list::hit(ray const& r, double t_min, double t_max, hit_record& re
     }
 
     return any_hit;
+}
+
+bool hittable_list::bounding_box(double time0, double time1, aabb& output_box) const
+{
+    if (list.empty())
+        return false;
+
+    aabb temp_box;
+    bool first = true;
+
+    for (auto const& o : list) {
+        if (!o->bounding_box(time0, time1, temp_box))
+            return false;
+        output_box = (first ? temp_box : surrounding_box(output_box, temp_box));
+        first = false;
+    }
+
+    return true;
 }

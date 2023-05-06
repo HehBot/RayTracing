@@ -5,6 +5,7 @@
 #include <cmath>
 #include <initializer_list>
 #include <iostream>
+#include <stdexcept>
 
 class vec3 {
 public:
@@ -14,6 +15,33 @@ public:
     vec3(double x, double y, double z)
         : x(x), y(y), z(z)
     {
+    }
+
+    double& operator[](std::size_t i)
+    {
+        switch (i) {
+        case 0:
+            return x;
+        case 1:
+            return y;
+        case 2:
+            return z;
+        default:
+            throw std::invalid_argument("Bad vector component");
+        }
+    }
+    double operator[](std::size_t i) const
+    {
+        switch (i) {
+        case 0:
+            return x;
+        case 1:
+            return y;
+        case 2:
+            return z;
+        default:
+            throw std::invalid_argument("Bad vector component");
+        }
     }
 
     vec3 operator-() const

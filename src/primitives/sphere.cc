@@ -38,3 +38,9 @@ bool sphere::hit(ray const& r, double t_min, double t_max, hit_record& rec) cons
 
     return true;
 }
+
+bool sphere::bounding_box(double time0, double time1, aabb& output_box) const
+{
+    output_box = aabb(position - radius * vec3(1.0, 1.0, 1.0), position + radius * vec3(1.0, 1.0, 1.0));
+    return true;
+}

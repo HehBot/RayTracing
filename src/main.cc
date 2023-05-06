@@ -1,3 +1,4 @@
+#include "bvh.h"
 #include "camera.h"
 #include "hittable_list.h"
 #include "img_file.h"
@@ -41,6 +42,8 @@ int main(int argc, char* argv[])
     hittable_list world;
     camera* cam = read_from_json(argv[1], m, world);
 
+    bvh_node W(world, cam->time0, cam->time1);
+
     auto t1 = std::chrono::high_resolution_clock::now();
 
     std::vector<color> image(m.width * m.height, { 0.0, 0.0, 0.0 });
@@ -56,7 +59,7 @@ int main(int argc, char* argv[])
             for (int k = 0; k < m.samples_per_pixel; ++k) {
                 double u = (i + random_double()) / m.width;
                 double v = (j + random_double()) / m.height;
-                accumulator += ray_color(cam->get_ray(u, v), world, m.max_depth);
+                accumulator += ray_color(cam->get_ray(u, v), W, m.max_depth);
             }
             image[c] = accumulator / m.samples_per_pixel;
         }

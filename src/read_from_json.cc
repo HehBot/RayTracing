@@ -5,7 +5,7 @@
 #include "material.h"
 #include "misc.h"
 #include "moving.h"
-#include "sphere.h"
+#include "primitives/sphere.h"
 
 #include <fstream>
 #include <nlohmann/json.hpp>

@@ -25,6 +25,11 @@ inline double random_double(double a, double b)
 {
     return a + (b - a) * random_double();
 }
+// random integer in [a, b)
+inline int random_int(int a, int b)
+{
+    return (int)(random_double(a, b));
+}
 inline vec3 random_unit_vec()
 {
     double theta = 2 * pi * random_double();

@@ -14,6 +14,7 @@ public:
     sphere(pos3 const& position, double radius, std::shared_ptr<material> m);
 
     virtual bool hit(ray const& r, double t_min, double t_max, hit_record& rec) const override;
+    virtual bool bounding_box(double time0, double time1, aabb& output_box) const override;
 };
 
 #endif /* SPHERE_H */
