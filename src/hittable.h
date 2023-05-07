@@ -14,6 +14,7 @@ struct hit_record {
     vec3 normal;
     double t;
     bool front_face;
+    double u, v;
     std::shared_ptr<material> mat_ptr;
 
     inline void set_face_normal(ray const& r, vec3 const& outward_normal)
@@ -26,6 +27,10 @@ struct hit_record {
 class hittable {
 public:
     pos3 const position;
+    hittable()
+        : position(0.0, 0.0, 0.0)
+    {
+    }
     hittable(pos3 p)
         : position(p)
     {

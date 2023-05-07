@@ -40,7 +40,7 @@ int main(int argc, char* argv[])
     }
 
     hittable_list world;
-    camera* cam = read_from_json(argv[1], m, world);
+    std::shared_ptr<camera> cam = read_from_json(argv[1], m, world);
 
     bvh_node W(world, cam->time0, cam->time1);
 

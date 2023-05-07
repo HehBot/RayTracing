@@ -17,28 +17,14 @@
                 ],
                 "material": {
                     "type": "lambertian",
-                    "albedo": [
-                        0.8,
-                        0.8,
-                        0.0
-                    ]
-                }
-            },
-            {
-                "type": "sphere",
-                "radius": 100.0,
-                "position": [
-                    0.0,
-                    -100.5,
-                    -1.0
-                ],
-                "material": {
-                    "type": "lambertian",
-                    "albedo": [
-                        0.8,
-                        0.8,
-                        0.0
-                    ]
+                    "albedo": {
+                        "color": [
+                            0.8,
+                            0.8,
+                            0.0
+                        ],
+                        "type": "solid_color"
+                    }
                 }
             },
             {
@@ -51,11 +37,14 @@
                 ],
                 "material": {
                     "type": "lambertian",
-                    "albedo": [
-                        0.1,
-                        0.2,
-                        0.5
-                    ]
+                    "albedo": {
+                        "color": [
+                            0.1,
+                            0.2,
+                            0.5
+                        ],
+                        "type": "solid_color"
+                    }
                 }
             },
             {
@@ -94,11 +83,14 @@
                 ],
                 "material": {
                     "type": "metal",
-                    "albedo": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ],
+                    "albedo": {
+                        "color": [
+                            0.8,
+                            0.6,
+                            0.2
+                        ],
+                        "type": "solid_color"
+                    },
                     "fuzz": 0.0
                 }
             }
@@ -127,7 +119,7 @@
             0.0
         ],
         "fov": 20.0,
-        "aperture": 0.1,
+        "aperture": 2.0,
         "focal_distance": 5.196
     }
 }

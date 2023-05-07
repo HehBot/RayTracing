@@ -4,6 +4,15 @@
 #include "ray.h"
 #include "vec3.h"
 
+void sphere::get_sphere_uv(pos3 const& p, double& u, double& v)
+{
+    double theta = acos(-p.y);
+    double phi = atan2(-p.z, p.x) + pi;
+
+    u = 0.5 * phi / pi;
+    v = theta / pi;
+}
+
 sphere::sphere(pos3 const& position, double radius, std::shared_ptr<material> m)
     : hittable(position), radius(radius), mat_ptr(m)
 {
@@ -34,6 +43,7 @@ bool sphere::hit(ray const& r, double t_min, double t_max, hit_record& rec) cons
     rec.p = r.at(root);
     vec3 outward_normal = (rec.p - position) / radius;
     rec.set_face_normal(r, outward_normal);
+    get_sphere_uv(outward_normal, rec.u, rec.v);
     rec.mat_ptr = mat_ptr;
 
     return true;
@@ -41,6 +51,6 @@ bool sphere::hit(ray const& r, double t_min, double t_max, hit_record& rec) cons
 
 bool sphere::bounding_box(double time0, double time1, aabb& output_box) const
 {
-    output_box = aabb(position - radius * vec3(1.0, 1.0, 1.0), position + radius * vec3(1.0, 1.0, 1.0));
+    output_box = aabb(position - fabs(radius) * vec3(1.0, 1.0, 1.0), position + fabs(radius) * vec3(1.0, 1.0, 1.0));
     return true;
 }

@@ -3,8 +3,10 @@
 #include "ray.h"
 #include "vec3.h"
 
+#include <memory>
+
 // Lambertian material
-lambertian::lambertian(color a)
+lambertian::lambertian(std::shared_ptr<texture> a)
     : albedo(a)
 {
 }
@@ -16,12 +18,12 @@ bool lambertian::scatter(ray const& r, hit_record const& rec, color& attenuation
         scatter_dir = rec.normal;
 
     scattered = ray(rec.p, scatter_dir, r.time);
-    attenuation = albedo;
+    attenuation = albedo->value(rec.u, rec.v, rec.p);
     return true;
 }
 
 // Metallic material
-metal::metal(color const& a, double f)
+metal::metal(std::shared_ptr<texture> a, double f)
     : albedo(a), fuzz(f > 1.0 ? 1.0 : f)
 {
 }
@@ -31,7 +33,7 @@ bool metal::scatter(ray const& r, hit_record const& rec, color& attenuation, ray
 {
     vec3 reflected = reflect(r.direction, rec.normal).unit_vec() + fuzz * random_vec_in_sphere();
     scattered = ray(rec.p, reflected, r.time);
-    attenuation = albedo;
+    attenuation = albedo->value(rec.u, rec.v, rec.p);
     return (dot(scattered.direction, rec.normal) > 0.0);
 }
 

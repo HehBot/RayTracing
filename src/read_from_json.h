@@ -4,6 +4,8 @@
 #include "camera.h"
 #include "hittable_list.h"
 
+#include <memory>
+
 struct metadata {
     int width, height;
     double aspect_ratio;
@@ -12,6 +14,6 @@ struct metadata {
     color background_color;
 };
 
-camera* read_from_json(char const* filename, metadata& m, hittable_list& world);
+std::shared_ptr<camera> read_from_json(char const* filename, metadata& m, hittable_list& world);
 
 #endif // READ_FROM_JSON_H

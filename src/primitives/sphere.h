@@ -7,6 +7,8 @@
 #include "vec3.h"
 
 class sphere : public hittable {
+    static void get_sphere_uv(pos3 const& p, double& u, double& v);
+
 public:
     double const radius;
     std::shared_ptr<material> const mat_ptr;

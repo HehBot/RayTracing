@@ -6,10 +6,6 @@
 
 #include <memory>
 
-hittable_list::hittable_list()
-    : hittable(pos3(0.0, 0.0, 0.0))
-{
-}
 void hittable_list::clear()
 {
     list.clear();
