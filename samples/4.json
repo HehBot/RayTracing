@@ -1,0 +1,70 @@
+{
+    "image": {
+        "width": 400,
+        "aspect_ratio": 1.7778,
+        "samples_per_pixel": 100,
+        "max_depth": 50
+    },
+    "world": {
+        "objects": [
+            {
+                "type": "sphere",
+                "radius": 1000.0,
+                "position": [
+                    0.0,
+                    -1000.0,
+                    0.0
+                ],
+                "material": {
+                    "type": "lambertian",
+                    "albedo": {
+                        "type": "noise_texture",
+                        "scale": 4.0
+                    }
+                }
+            },
+            {
+                "type": "sphere",
+                "radius": 2.0,
+                "position": [
+                    0.0,
+                    2.0,
+                    0.0
+                ],
+                "material": {
+                    "type": "lambertian",
+                    "albedo": {
+                        "type": "noise_texture",
+                        "scale": 4.0
+                    }
+                }
+            }
+        ],
+        "background_color": [
+            1.0,
+            1.0,
+            1.0
+        ]
+    },
+    "camera": {
+        "type": "ThinLens",
+        "look_from": [
+            13.0,
+            2.0,
+            3.0
+        ],
+        "look_at": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "vup": [
+            0.0,
+            1.0,
+            0.0
+        ],
+        "fov": 20.0,
+        "aperture": 0.0,
+        "focal_distance": 10.0
+    }
+}

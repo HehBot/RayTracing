@@ -44,6 +44,8 @@ static std::shared_ptr<texture> parse_texture(json const& j)
         std::shared_ptr<texture> e = parse_texture(j["even"]);
         std::shared_ptr<texture> o = parse_texture(j["odd"]);
         return std::make_shared<checker_texture>(e, o);
+    } else if (j["type"] == "noise_texture") {
+        return std::make_shared<noise_texture>(j["scale"]);
     } else
         throw std::invalid_argument("Invalid texture");
 }
