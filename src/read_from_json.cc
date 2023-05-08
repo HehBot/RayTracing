@@ -10,11 +10,27 @@
 
 #include <fstream>
 #include <functional>
+#include <libgen.h>
 #include <memory>
 #include <nlohmann/json.hpp>
 #include <stdexcept>
+#include <string>
+#include <unistd.h>
 
 using json = nlohmann::json;
+
+static std::string dir;
+
+std::string get_json_dir(char const* json_filename)
+{
+    char* z = new char[strlen(json_filename) + 1];
+    strcpy(z, json_filename);
+    char* f = get_current_dir_name();
+    std::string dir = std::string(f) + std::string("/") + std::string(dirname(z));
+    free(f);
+    delete[] z;
+    return dir;
+}
 
 static void parse_metadata(json const& j, metadata& m)
 {
@@ -46,6 +62,8 @@ static std::shared_ptr<texture> parse_texture(json const& j)
         return std::make_shared<checker_texture>(e, o);
     } else if (j["type"] == "noise_texture") {
         return std::make_shared<noise_texture>(j["scale"]);
+    } else if (j["type"] == "image_texture") {
+        return std::make_shared<image_texture>((dir + std::string("/") + std::string(j["path"])).c_str());
     } else
         throw std::invalid_argument("Invalid texture");
 }
@@ -94,6 +112,7 @@ static std::function<pos3(double)> parse_path(json const& j)
 
 std::shared_ptr<camera> read_from_json(char const* filename, metadata& m, hittable_list& world)
 {
+    dir = get_json_dir(filename);
     json scene_spec = json::parse(std::ifstream(filename));
 
     parse_metadata(scene_spec["image"], m);
