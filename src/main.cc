@@ -2,14 +2,12 @@
 #include "camera.h"
 #include "hittable_list.h"
 #include "img_file.h"
-#include "material.h"
 #include "misc.h"
 #include "ray.h"
 #include "read_from_json.h"
 #include "vec3.h"
 
 #include <chrono>
-#include <cmath>
 #include <iostream>
 #include <thread>
 #include <vector>

@@ -3,10 +3,17 @@
 #include "camera.h"
 #include "hittable_list.h"
 #include "material.h"
+#include "materials/dielectric.h"
+#include "materials/lambertian.h"
+#include "materials/metal.h"
 #include "misc.h"
 #include "moving.h"
 #include "primitives/sphere.h"
 #include "texture.h"
+#include "textures/checker_texture.h"
+#include "textures/image_texture.h"
+#include "textures/noise_texture.h"
+#include "textures/solid_color.h"
 
 #include <fstream>
 #include <functional>

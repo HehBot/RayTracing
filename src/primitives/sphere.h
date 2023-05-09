@@ -1,10 +1,10 @@
 #ifndef SPHERE_H
 #define SPHERE_H
 
-#include "hittable.h"
-#include "material.h"
-#include "ray.h"
-#include "vec3.h"
+#include "../hittable.h"
+#include "../material.h"
+#include "../ray.h"
+#include "../vec3.h"
 
 class sphere : public hittable {
     static void get_sphere_uv(pos3 const& p, double& u, double& v);

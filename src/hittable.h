@@ -2,6 +2,7 @@
 #define HITTABLE_H
 
 #include "aabb.h"
+#include "material.h"
 #include "ray.h"
 #include "vec3.h"
 

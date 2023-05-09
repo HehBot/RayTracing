@@ -1,8 +1,9 @@
 #include "sphere.h"
 
-#include "hittable.h"
-#include "ray.h"
-#include "vec3.h"
+#include "../hittable.h"
+#include "../misc.h"
+#include "../ray.h"
+#include "../vec3.h"
 
 void sphere::get_sphere_uv(pos3 const& p, double& u, double& v)
 {
