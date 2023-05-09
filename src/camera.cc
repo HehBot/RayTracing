@@ -11,7 +11,13 @@ camera::camera(pos3 lookfrom, pos3 lookat, vec3 vup, double vfov, double aspect,
     double viewport_width = aspect * viewport_height;
 
     w = (lookfrom - lookat).unit_vec();
-    u = cross(vup, w).unit_vec();
+    u = cross(vup, w);
+    if (u.near_zero()) {
+        if ((u = cross(vec3(1.0, 0.0, 0.0), w)).near_zero())
+            if ((u = cross(vec3(0.0, 1.0, 0.0), w)).near_zero())
+                u = cross(vec3(0.0, 0.0, 1.0), w);
+    }
+    u = u.unit_vec();
     v = cross(w, u).unit_vec();
 
     horizontal = focus_dist * viewport_width * u;

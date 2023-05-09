@@ -3,6 +3,7 @@
 
 #include "camera.h"
 #include "hittable_list.h"
+#include "texture.h"
 
 #include <memory>
 
@@ -11,7 +12,7 @@ struct metadata {
     double aspect_ratio;
     int samples_per_pixel;
     int max_depth;
-    color background_color;
+    std::shared_ptr<texture> background;
 };
 
 std::shared_ptr<camera> read_from_json(char const* filename, metadata& m, hittable_list& world);

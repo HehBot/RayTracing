@@ -20,4 +20,4 @@ public:
     virtual bool bounding_box(double time0, double time1, aabb& output_box) const override;
 };
 
-#endif /* HITTABLE_LIST_H */
+#endif // HITTABLE_LIST_H

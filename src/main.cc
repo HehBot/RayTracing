@@ -12,9 +12,7 @@
 #include <thread>
 #include <vector>
 
-static metadata m;
-
-color ray_color(ray const& r, hittable const& world, int depth)
+color ray_color(ray const& r, hittable const& world, std::shared_ptr<texture> background, int depth)
 {
     if (depth <= 0)
         return color(0.0, 0.0, 0.0);
@@ -24,10 +22,13 @@ color ray_color(ray const& r, hittable const& world, int depth)
         ray scattered;
         color attenuation;
         if (rec.mat_ptr->scatter(r, rec, attenuation, scattered))
-            return attenuation * ray_color(scattered, world, depth - 1);
+            return attenuation * ray_color(scattered, world, background, depth - 1);
         return color(0.0, 0.0, 0.0);
     }
-    return m.background_color;
+
+    double u, v;
+    get_sphere_uv(r.direction.unit_vec(), u, v);
+    return background->value(u, v, r.direction);
 }
 
 int main(int argc, char* argv[])
@@ -37,6 +38,7 @@ int main(int argc, char* argv[])
         return 0;
     }
 
+    metadata m;
     hittable_list world;
     std::shared_ptr<camera> cam = read_from_json(argv[1], m, world);
 
@@ -57,7 +59,7 @@ int main(int argc, char* argv[])
             for (int k = 0; k < m.samples_per_pixel; ++k) {
                 double u = (i + random_double()) / m.width;
                 double v = (j + random_double()) / m.height;
-                accumulator += ray_color(cam->get_ray(u, v), W, m.max_depth);
+                accumulator += ray_color(cam->get_ray(u, v), W, m.background, m.max_depth);
             }
             image[c] = accumulator / m.samples_per_pixel;
         }

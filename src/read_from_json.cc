@@ -126,8 +126,7 @@ std::shared_ptr<camera> read_from_json(char const* filename, metadata& m, hittab
 
     {
         json const& world_spec = scene_spec["world"];
-        auto bc = world_spec["background_color"];
-        m.background_color = color(bc[0], bc[1], bc[2]);
+        m.background = parse_texture(world_spec["background"]);
 
         for (auto const& z : world_spec["objects"]) {
             std::shared_ptr<hittable> obj = parse_object(z);

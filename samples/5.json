@@ -24,18 +24,21 @@
                 }
             }
         ],
-        "background_color": [
-            1.0,
-            1.0,
-            1.0
-        ]
+        "background": {
+            "type": "solid_color",
+            "color": [
+                0.7,
+                0.8,
+                1.0
+            ]
+        }
     },
     "camera": {
         "type": "ThinLens",
         "look_from": [
-            13.0,
-            2.0,
-            3.0
+            0.0,
+            20.0,
+            0.0
         ],
         "look_at": [
             0.0,

@@ -19,4 +19,4 @@ public:
     ray get_ray(double u, double v) const;
 };
 
-#endif /* CAMERA_H */
+#endif // CAMERA_H

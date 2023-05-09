@@ -5,15 +5,6 @@
 #include "../ray.h"
 #include "../vec3.h"
 
-void sphere::get_sphere_uv(pos3 const& p, double& u, double& v)
-{
-    double theta = acos(-p.y);
-    double phi = atan2(-p.z, p.x) + pi;
-
-    u = 0.5 * phi / pi;
-    v = theta / pi;
-}
-
 sphere::sphere(pos3 const& position, double radius, std::shared_ptr<material> m)
     : hittable(position), radius(radius), mat_ptr(m)
 {

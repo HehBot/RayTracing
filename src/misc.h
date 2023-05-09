@@ -52,4 +52,6 @@ inline double clamp(double x, double min, double max)
     return x;
 }
 
+void get_sphere_uv(pos3 const& p, double& u, double& v);
+
 #endif // MISC_H

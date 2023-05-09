@@ -40,4 +40,4 @@ public:
     virtual bool bounding_box(double time0, double time1, aabb& output_box) const = 0;
 };
 
-#endif /* HITTABLE_H */
+#endif // HITTABLE_H
