@@ -18,17 +18,20 @@ color ray_color(ray const& r, hittable const& world, std::shared_ptr<texture> ba
         return color(0.0, 0.0, 0.0);
 
     hit_record rec;
-    if (world.hit(r, 0.001, infinity, rec)) {
-        ray scattered;
-        color attenuation;
-        if (rec.mat_ptr->scatter(r, rec, attenuation, scattered))
-            return attenuation * ray_color(scattered, world, background, depth - 1);
-        return color(0.0, 0.0, 0.0);
+    if (!world.hit(r, 0.001, infinity, rec)) {
+        double u, v;
+        get_sphere_uv(r.direction.unit_vec(), u, v);
+        return background->value(u, v, r.direction);
     }
 
-    double u, v;
-    get_sphere_uv(r.direction.unit_vec(), u, v);
-    return background->value(u, v, r.direction);
+    ray scattered;
+    color attenuation;
+    color emitted = rec.mat_ptr->emitted(rec.u, rec.v, rec.p);
+
+    if (!rec.mat_ptr->scatter(r, rec, attenuation, scattered))
+        return emitted;
+
+    return emitted + attenuation * ray_color(scattered, world, background, depth - 1);
 }
 
 int main(int argc, char* argv[])

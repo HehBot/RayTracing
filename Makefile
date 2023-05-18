@@ -1,5 +1,6 @@
 CXX := g++
 CC := gcc
+LD := g++
 TARGET_NAME := main
 
 BUILD_DIR := build
@@ -25,7 +26,7 @@ LIBFLAGS := -lpthread
 
 $(TARGET_EXEC): $(OBJS)
 	@mkdir -p $(dir $@)
-	$(CXX) $(LDFLAGS) -o $@ $^ $(LIBFLAGS)
+	$(LD) $(LDFLAGS) -o $@ $^ $(LIBFLAGS)
 
 $(BUILD_DIR)/%.cc.o: %.cc
 	@mkdir -p $(dir $@)

@@ -4,10 +4,12 @@
 #include "hittable_list.h"
 #include "material.h"
 #include "materials/dielectric.h"
+#include "materials/diffuse_light.h"
 #include "materials/lambertian.h"
 #include "materials/metal.h"
 #include "misc.h"
 #include "moving.h"
+#include "primitives/aarect.h"
 #include "primitives/sphere.h"
 #include "texture.h"
 #include "textures/checker_texture.h"
@@ -85,6 +87,9 @@ static std::shared_ptr<material> parse_material(json const& j)
         return std::make_shared<metal>(albedo, j["fuzz"]);
     } else if (j["type"] == "dielectric") {
         return std::make_shared<dielectric>(j["ir"]);
+    } else if (j["type"] == "diffuse_light") {
+        std::shared_ptr<texture> color = parse_texture(j["color"]);
+        return std::make_shared<diffuse_light>(color);
     } else
         throw std::invalid_argument("Invalid material");
 }
@@ -93,9 +98,15 @@ static std::shared_ptr<hittable> parse_object(json const& j)
 {
     std::shared_ptr<material> mat = parse_material(j["material"]);
 
-    auto pos = j["position"];
-    if (j["type"] == "sphere")
+    if (j["type"] == "sphere") {
+        auto pos = j["position"];
         return std::make_shared<sphere>(pos3(pos[0], pos[1], pos[2]), j["radius"], mat);
+    } else if (j["type"] == "xy_rect")
+        return std::make_shared<xy_rect>(j["x0"], j["y0"], j["x1"], j["y1"], j["z"], mat);
+    else if (j["type"] == "yz_rect")
+        return std::make_shared<yz_rect>(j["y0"], j["z0"], j["y1"], j["z1"], j["x"], mat);
+    else if (j["type"] == "zx_rect")
+        return std::make_shared<zx_rect>(j["z0"], j["x0"], j["z1"], j["x1"], j["y"], mat);
     else
         throw std::invalid_argument("Invalid object");
 }

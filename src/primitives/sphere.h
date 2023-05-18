@@ -1,5 +1,5 @@
-#ifndef SPHERE_H
-#define SPHERE_H
+#ifndef PRIMITIVES_SPHERE_H
+#define PRIMITIVES_SPHERE_H
 
 #include "../hittable.h"
 #include "../material.h"
@@ -17,4 +17,4 @@ public:
     virtual bool bounding_box(double time0, double time1, aabb& output_box) const override;
 };
 
-#endif // SPHERE_H
+#endif // PRIMITIVES_SPHERE_H
