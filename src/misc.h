@@ -1,13 +1,10 @@
 #ifndef MISC_H
 #define MISC_H
 
+#include "constants.h"
 #include "vec3.h"
 
 #include <cmath>
-#include <limits>
-
-double constexpr infinity = std::numeric_limits<double>::infinity();
-double constexpr pi = 3.1415926535897932385;
 
 inline double deg_to_rad(double deg)
 {

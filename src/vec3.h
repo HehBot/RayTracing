@@ -1,6 +1,8 @@
 #ifndef VEC3_H
 #define VEC3_H
 
+#include "constants.h"
+
 #include <cassert>
 #include <cmath>
 #include <initializer_list>
@@ -114,8 +116,7 @@ public:
     }
     bool near_zero() const
     {
-        double constexpr s = 1e-8;
-        return length() < s;
+        return length() < epsilon;
     }
 };
 

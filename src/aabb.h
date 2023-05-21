@@ -4,6 +4,8 @@
 #include "ray.h"
 #include "vec3.h"
 
+double constexpr half_min_thickness = 1e-4;
+
 class aabb {
 public:
     pos3 min, max;

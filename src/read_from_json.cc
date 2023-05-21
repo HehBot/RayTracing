@@ -11,6 +11,7 @@
 #include "moving.h"
 #include "primitives/aarect.h"
 #include "primitives/sphere.h"
+#include "primitives/triangle.h"
 #include "texture.h"
 #include "textures/checker_texture.h"
 #include "textures/image_texture.h"
@@ -107,7 +108,12 @@ static std::shared_ptr<hittable> parse_object(json const& j)
         return std::make_shared<yz_rect>(j["y0"], j["z0"], j["y1"], j["z1"], j["x"], mat);
     else if (j["type"] == "zx_rect")
         return std::make_shared<zx_rect>(j["z0"], j["x0"], j["z1"], j["x1"], j["y"], mat);
-    else
+    else if (j["type"] == "triangle") {
+        auto v1 = j["v1"];
+        auto v2 = j["v2"];
+        auto v3 = j["v3"];
+        return std::make_shared<triangle>(pos3(v1[0], v1[1], v1[2]), pos3(v2[0], v2[1], v2[2]), pos3(v3[0], v3[1], v3[2]), mat);
+    } else
         throw std::invalid_argument("Invalid object");
 }
 

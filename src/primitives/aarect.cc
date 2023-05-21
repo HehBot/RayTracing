@@ -37,7 +37,7 @@ bool xy_rect::hit(ray const& r, double t_min, double t_max, hit_record& rec) con
 }
 bool xy_rect::bounding_box(double time0, double time1, aabb& output_box) const
 {
-    output_box = aabb(pos3(x0, y0, z - 0.0001), pos3(x1, y1, z + 0.0001));
+    output_box = aabb(pos3(x0, y0, z - half_min_thickness), pos3(x1, y1, z + half_min_thickness));
     return true;
 }
 
@@ -70,7 +70,7 @@ bool yz_rect::hit(ray const& r, double t_min, double t_max, hit_record& rec) con
 }
 bool yz_rect::bounding_box(double time0, double time1, aabb& output_box) const
 {
-    output_box = aabb(pos3(x - 0.0001, y0, z0), pos3(x + 0.0001, y1, z1));
+    output_box = aabb(pos3(x - half_min_thickness, y0, z0), pos3(x + half_min_thickness, y1, z1));
     return true;
 }
 
@@ -103,6 +103,6 @@ bool zx_rect::hit(ray const& r, double t_min, double t_max, hit_record& rec) con
 }
 bool zx_rect::bounding_box(double time0, double time1, aabb& output_box) const
 {
-    output_box = aabb(pos3(x0, y - 0.0001, z0), pos3(x1, y + 0.0001, z1));
+    output_box = aabb(pos3(x0, y - half_min_thickness, z0), pos3(x1, y + half_min_thickness, z1));
     return true;
 }

@@ -7,8 +7,6 @@
 #include <stdexcept>
 #include <vector>
 
-// double constexpr gamma = 2.0;
-
 void write_to_img_file(char const* filename, img_format f, int w, int h, std::vector<color> const& image)
 {
     switch (f) {

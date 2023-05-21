@@ -1,5 +1,6 @@
 #include "bvh.h"
 #include "camera.h"
+#include "constants.h"
 #include "hittable_list.h"
 #include "img_file.h"
 #include "misc.h"
