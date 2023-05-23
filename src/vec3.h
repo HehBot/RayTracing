@@ -71,9 +71,23 @@ public:
         z *= t;
         return *this;
     }
+    vec3& operator*=(vec3 const& v)
+    {
+        x *= v.x;
+        y *= v.y;
+        z *= v.z;
+        return *this;
+    }
     vec3& operator/=(double t)
     {
         return ((*this) *= (1.0 / t));
+    }
+    vec3& operator/=(vec3 const& v)
+    {
+        x /= v.x;
+        y /= v.y;
+        z /= v.z;
+        return *this;
     }
 
     double length_sq() const

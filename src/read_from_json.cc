@@ -3,6 +3,7 @@
 #include "camera.h"
 #include "hittable_list.h"
 #include "instances/rotate.h"
+#include "instances/scale.h"
 #include "instances/translate.h"
 #include "material.h"
 #include "materials/dielectric.h"
@@ -143,8 +144,8 @@ static std::function<pos3(double)> parse_path(json const& j)
 
 static void parse_transformation(std::shared_ptr<hittable>& obj, json const& j)
 {
-    //     if (j.items().size() != 1)
-    //         throw std::invalid_argument("Invalid transform");
+    if (j.size() != 1)
+        throw std::invalid_argument("Invalid transform");
     if (j.contains("translate")) {
         auto offset = j["translate"];
         obj = std::make_shared<translate>(obj, vec3(offset[0], offset[1], offset[2]));
@@ -154,7 +155,10 @@ static void parse_transformation(std::shared_ptr<hittable>& obj, json const& j)
         obj = std::make_shared<rotate_y>(obj, deg_to_rad(j["yRotation"]));
     else if (j.contains("zRotation"))
         obj = std::make_shared<rotate_z>(obj, deg_to_rad(j["zRotation"]));
-    else
+    else if (j.contains("scale")) {
+        auto sc = j["scale"];
+        obj = std::make_shared<scale>(obj, vec3(sc[0], sc[1], sc[2]));
+    } else
         throw std::invalid_argument("Invalid transform");
 }
 
