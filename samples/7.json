@@ -1,0 +1,227 @@
+{
+    "image": {
+        "width": 600,
+        "aspect_ratio": 1.0,
+        "samples_per_pixel": 200,
+        "max_depth": 50
+    },
+    "world": {
+        "objects": [
+            {
+                "type": "yz_rect",
+                "y0": 0.0,
+                "z0": 0.0,
+                "y1": 555.0,
+                "z1": 555.0,
+                "x": 555.0,
+                "material" : {
+                    "type": "lambertian",
+                    "albedo": {
+                        "type": "solid_color",
+                        "color": [
+                            0.12,
+                            0.45,
+                            0.15
+                        ]
+                    }
+                }
+            },
+            {
+                "type": "yz_rect",
+                "y0": 0.0,
+                "z0": 0.0,
+                "y1": 555.0,
+                "z1": 555.0,
+                "x": 0.0,
+                "material" : {
+                    "type": "lambertian",
+                    "albedo": {
+                        "type": "solid_color",
+                        "color": [
+                            0.65,
+                            0.05,
+                            0.05
+                        ]
+                    }
+                }
+            },
+            {
+                "type": "zx_rect",
+                "z0": 227.0,
+                "x0": 213.0,
+                "z1": 332.0,
+                "x1": 343.0,
+                "y": 554.0,
+                "material" : {
+                    "type": "diffuse_light",
+                    "color": {
+                        "type": "solid_color",
+                        "color": [
+                            15.0,
+                            15.0,
+                            15.0
+                        ]
+                    }
+                }
+            },
+            {
+                "type": "zx_rect",
+                "z0": 0.0,
+                "x0": 0.0,
+                "z1": 555.0,
+                "x1": 555.0,
+                "y": 0.0,
+                "material" : {
+                    "type": "lambertian",
+                    "albedo": {
+                        "type": "solid_color",
+                        "color": [
+                            0.73,
+                            0.73,
+                            0.73
+                        ]
+                    }
+                }
+            },
+            {
+                "type": "zx_rect",
+                "z0": 0.0,
+                "x0": 0.0,
+                "z1": 555.0,
+                "x1": 555.0,
+                "y": 555.0,
+                "material" : {
+                    "type": "lambertian",
+                    "albedo": {
+                        "type": "solid_color",
+                        "color": [
+                            0.73,
+                            0.73,
+                            0.73
+                        ]
+                    }
+                }
+            },
+            {
+                "type": "xy_rect",
+                "x0": 0.0,
+                "y0": 0.0,
+                "x1": 555.0,
+                "y1": 555.0,
+                "z": 555.0,
+                "material" : {
+                    "type": "lambertian",
+                    "albedo": {
+                        "type": "solid_color",
+                        "color": [
+                            0.73,
+                            0.73,
+                            0.73
+                        ]
+                    }
+                }
+            },
+            {
+                "type": "box",
+                "p0": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "p1": [
+                    165.0,
+                    165.0,
+                    165.0
+                ],
+                "material" : {
+                    "type": "lambertian",
+                    "albedo": {
+                        "type": "solid_color",
+                        "color": [
+                            0.73,
+                            0.73,
+                            0.73
+                        ]
+                    }
+                },
+                "transformation" : [
+                    {
+                        "yRotation": -18.0
+                    },
+                    {
+                        "translate": [
+                            130.0,
+                            0.0,
+                            65.0
+                        ]
+                    }
+                ]
+            },
+            {
+                "type": "box",
+                "p0": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "p1": [
+                    165.0,
+                    330.0,
+                    165.0
+                ],
+                "material" : {
+                    "type": "lambertian",
+                    "albedo": {
+                        "type": "solid_color",
+                        "color": [
+                            0.73,
+                            0.73,
+                            0.73
+                        ]
+                    }
+                },
+                "transformation" : [
+                    {
+                        "yRotation" : 15.0
+                    },
+                    {
+                        "translate" : [
+                            265.0,
+                            0.0,
+                            295.0
+                        ]
+                    }
+                ]
+            }
+        ],
+        "background": {
+            "type": "solid_color",
+            "color": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        }
+    },
+    "camera": {
+        "type": "ThinLens",
+        "look_from": [
+            278.0,
+            278.0,
+            -800.0
+        ],
+        "look_at": [
+            278.0,
+            278.0,
+            0.0
+        ],
+        "vup": [
+            0.0,
+            1.0,
+            0.0
+        ],
+        "fov": 40.0,
+        "aperture": 0.0,
+        "focal_distance": 10.0
+    }
+}

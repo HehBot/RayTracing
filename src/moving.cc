@@ -22,6 +22,7 @@ bool moving::hit(ray const& r, double t_min, double t_max, hit_record& rec) cons
     rec.set_face_normal(moved_r, rec.normal);
     return true;
 }
+// TODO fix this janky implementation
 bool moving::bounding_box(double time0, double time1, aabb& output_box) const
 {
     aabb initial_box;
