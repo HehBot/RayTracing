@@ -1,7 +1,7 @@
 #ifndef PERLIN_H
 #define PERLIN_H
 
-#include "vec3.h"
+#include <vec3.h>
 
 class perlin {
     static int constexpr point_count = 256;

@@ -1,10 +1,9 @@
-#include "hittable_list.h"
-
-#include "aabb.h"
-#include "ray.h"
-#include "vec3.h"
-
+#include <aabb.h>
+#include <hittable.h>
+#include <hittable_list.h>
 #include <memory>
+
+class ray;
 
 void hittable_list::clear()
 {
@@ -15,36 +14,26 @@ void hittable_list::add(std::shared_ptr<hittable> o)
     list.push_back(o);
 }
 
-bool hittable_list::hit(ray const& r, double t_min, double t_max, hit_record& rec) const
+bool hittable_list::hit(ray const& r, interval ray_t, hit_record& rec) const
 {
     bool any_hit = false;
-    rec.t = t_max;
+    double closest_so_far = ray_t.max;
 
-    for (auto const& p : list) {
+    for (auto const& obj : list) {
         hit_record rec_temp;
-        if (p->hit(r, t_min, rec.t, rec_temp)) {
+        if (obj->hit(r, interval(ray_t.min, closest_so_far), rec_temp)) {
             any_hit = true;
+            closest_so_far = rec_temp.t;
             rec = rec_temp;
         }
     }
 
     return any_hit;
 }
-
-bool hittable_list::bounding_box(double time0, double time1, aabb& output_box) const
+aabb hittable_list::bounding_box(double time0, double time1) const
 {
-    if (list.empty())
-        return false;
-
-    aabb temp_box;
-    bool first = true;
-
-    for (auto const& o : list) {
-        if (!o->bounding_box(time0, time1, temp_box))
-            return false;
-        output_box = (first ? temp_box : surrounding_box(output_box, temp_box));
-        first = false;
-    }
-
-    return true;
+    aabb bbox;
+    for (auto const& o : list)
+        bbox = aabb(bbox, o->bounding_box(time0, time1));
+    return bbox;
 }

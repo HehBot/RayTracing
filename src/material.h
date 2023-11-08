@@ -1,9 +1,9 @@
 #ifndef MATERIAL_H
 #define MATERIAL_H
 
-#include "hittable.h"
-#include "ray.h"
-#include "vec3.h"
+#include <hittable.h>
+#include <ray.h>
+#include <vec3.h>
 
 struct hit_record;
 

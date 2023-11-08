@@ -1,11 +1,11 @@
 #ifndef MATERIALS_DIELECTRIC_H
 #define MATERIALS_DIELECTRIC_H
 
-#include "../hittable.h"
-#include "../ray.h"
-#include "../vec3.h"
+#include <material.h>
+#include <vec3.h>
 
-#include <memory>
+class ray;
+struct hit_record;
 
 class dielectric : public material {
     static double reflectance(double cos, double ref_ratio);

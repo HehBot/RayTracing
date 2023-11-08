@@ -1,11 +1,11 @@
 #include "metal.h"
 
-#include "../misc.h"
-#include "../ray.h"
-#include "../texture.h"
-#include "../vec3.h"
-
+#include <hittable.h>
 #include <memory>
+#include <misc.h>
+#include <ray.h>
+#include <texture.h>
+#include <vec3.h>
 
 metal::metal(std::shared_ptr<texture> a, double f)
     : albedo(a), fuzz(f > 1.0 ? 1.0 : f)

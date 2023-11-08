@@ -1,7 +1,8 @@
-#include "perlin.h"
-
-#include "misc.h"
-#include "vec3.h"
+#include <cmath>
+#include <cstddef>
+#include <misc.h>
+#include <perlin.h>
+#include <vec3.h>
 
 static int* generate_perm(int n)
 {
@@ -48,9 +49,9 @@ perlin::~perlin()
 }
 double perlin::noise(pos3 const& p) const
 {
-    auto u = p.x - floor(p.x);
-    auto v = p.y - floor(p.y);
-    auto w = p.z - floor(p.z);
+    auto u = p.x - std::floor(p.x);
+    auto v = p.y - std::floor(p.y);
+    auto w = p.z - std::floor(p.z);
 
     auto i = (int)floor(p.x);
     auto j = (int)floor(p.y);
@@ -79,5 +80,5 @@ double perlin::turb(pos3 const& p, int depth) const
         temp_p *= 2;
     }
 
-    return fabs(a);
+    return std::fabs(a);
 }

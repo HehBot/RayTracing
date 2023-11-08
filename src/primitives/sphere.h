@@ -1,10 +1,14 @@
 #ifndef PRIMITIVES_SPHERE_H
 #define PRIMITIVES_SPHERE_H
 
-#include "../hittable.h"
-#include "../material.h"
-#include "../ray.h"
-#include "../vec3.h"
+#include <hittable.h>
+#include <interval.h>
+#include <memory>
+#include <vec3.h>
+
+class aabb;
+class material;
+class ray;
 
 class sphere : public hittable {
 public:
@@ -13,8 +17,8 @@ public:
 
     sphere(pos3 const& position, double radius, std::shared_ptr<material> m);
 
-    virtual bool hit(ray const& r, double t_min, double t_max, hit_record& rec) const override;
-    virtual bool bounding_box(double time0, double time1, aabb& output_box) const override;
+    virtual bool hit(ray const& r, interval ray_t, hit_record& rec) const override;
+    virtual aabb bounding_box(double time0, double time1) const override;
 };
 
 #endif // PRIMITIVES_SPHERE_H

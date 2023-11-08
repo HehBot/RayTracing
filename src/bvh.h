@@ -1,11 +1,14 @@
 #ifndef BVH_H
 #define BVH_H
 
-#include "hittable.h"
-#include "hittable_list.h"
-#include "vec3.h"
-
+#include <aabb.h>
+#include <cstddef>
+#include <hittable.h>
 #include <memory>
+#include <vector>
+
+class hittable_list;
+class ray;
 
 class bvh_node : public hittable {
     std::shared_ptr<hittable> left, right;
@@ -16,8 +19,8 @@ public:
     bvh_node(std::vector<std::shared_ptr<hittable>> const& objects, std::size_t start, std::size_t end, double time0, double time1);
     bvh_node(hittable_list const& h, double time0, double time1);
 
-    virtual bool hit(ray const& r, double t_min, double t_max, hit_record& rec) const override;
-    virtual bool bounding_box(double time0, double time1, aabb& output_box) const override;
+    virtual bool hit(ray const& r, interval ray_t, hit_record& rec) const override;
+    virtual aabb bounding_box(double time0, double time1) const override;
 };
 
 #endif // BVH_H

@@ -1,10 +1,9 @@
 #ifndef VEC3_H
 #define VEC3_H
 
-#include "constants.h"
-
 #include <cassert>
 #include <cmath>
+#include <constants.h>
 #include <initializer_list>
 #include <iostream>
 #include <stdexcept>
@@ -159,7 +158,7 @@ inline vec3 reflect(vec3 const& v, vec3 const& n)
 inline vec3 refract(vec3 v_in, vec3 const& n, double mu_i_by_mu_t)
 {
     //    v_in = v_in.unit_vec();
-    double cos_theta = fmin(dot(-v_in, n), 1.0);
+    double cos_theta = std::fmin(dot(-v_in, n), 1.0);
     vec3 perp = mu_i_by_mu_t * (v_in + cos_theta * n);
     vec3 parallel = -std::sqrt(1.0 - perp.length_sq()) * n;
     return parallel + perp;

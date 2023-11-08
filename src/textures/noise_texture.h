@@ -1,11 +1,9 @@
 #ifndef TEXTURES_NOISE_TEXTURE_H
 #define TEXTURES_NOISE_TEXTURE_H
 
-#include "../perlin.h"
-#include "../texture.h"
-#include "../vec3.h"
-
-#include <memory>
+#include <perlin.h>
+#include <texture.h>
+#include <vec3.h>
 
 class noise_texture : public texture {
     perlin noise;

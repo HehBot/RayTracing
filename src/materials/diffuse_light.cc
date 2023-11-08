@@ -1,11 +1,11 @@
 #include "diffuse_light.h"
 
-#include "../hittable.h"
-#include "../ray.h"
-#include "../texture.h"
-#include "../vec3.h"
-
 #include <memory>
+#include <texture.h>
+#include <vec3.h>
+
+class ray;
+struct hit_record;
 
 diffuse_light::diffuse_light(std::shared_ptr<texture> a)
     : emit(a)

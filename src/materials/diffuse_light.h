@@ -1,12 +1,13 @@
 #ifndef MATERIALS_DIFFUSE_LIGHT_H
 #define MATERIALS_DIFFUSE_LIGHT_H
 
-#include "../hittable.h"
-#include "../ray.h"
-#include "../texture.h"
-#include "../vec3.h"
-
+#include <material.h>
 #include <memory>
+#include <vec3.h>
+
+class ray;
+class texture;
+struct hit_record;
 
 class diffuse_light : public material {
     std::shared_ptr<texture> emit;

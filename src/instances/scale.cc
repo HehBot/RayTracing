@@ -1,12 +1,14 @@
 #include "scale.h"
 
-#include "../aabb.h"
-#include "../constants.h"
-#include "../hittable.h"
-#include "../ray.h"
-
-#include <cmath>
+#include <aabb.h>
+#include <constants.h>
+#include <cstddef>
+#include <hittable.h>
 #include <memory>
+#include <ray.h>
+#include <stdexcept>
+#include <utility>
+#include <vec3.h>
 
 scale::scale(std::shared_ptr<hittable> ptr, vec3 const& m)
     : ptr(ptr), m(m)
@@ -15,10 +17,10 @@ scale::scale(std::shared_ptr<hittable> ptr, vec3 const& m)
         if (m[i] < epsilon && m[i] > -epsilon)
             throw std::invalid_argument("Invalid scaling transformation");
 }
-bool scale::hit(ray const& r, double t_min, double t_max, hit_record& rec) const
+bool scale::hit(ray const& r, interval ray_t, hit_record& rec) const
 {
     ray scaled_r(r.origin / m, r.direction / m, r.time);
-    if (!ptr->hit(scaled_r, t_min, t_max, rec))
+    if (!ptr->hit(scaled_r, ray_t, rec))
         return false;
 
     rec.p *= m;
@@ -26,17 +28,7 @@ bool scale::hit(ray const& r, double t_min, double t_max, hit_record& rec) const
     rec.set_face_normal(r, rec.normal);
     return true;
 }
-bool scale::bounding_box(double time0, double time1, aabb& output_box) const
+aabb scale::bounding_box(double time0, double time1) const
 {
-    aabb bbox;
-    if (!ptr->bounding_box(time0, time1, bbox))
-        return false;
-
-    for (std::size_t i = 0; i < 3; ++i) {
-        output_box.min[i] = bbox.min[i] * m[i];
-        output_box.max[i] = bbox.max[i] * m[i];
-        if (output_box.min[i] > output_box.max[i])
-            std::swap(output_box.min[i], output_box.max[i]);
-    }
-    return true;
+    return ptr->bounding_box(time0, time1).scale(m);
 }

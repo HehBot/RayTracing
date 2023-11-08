@@ -1,10 +1,8 @@
-#include "misc.h"
-
-#include "constants.h"
-#include "vec3.h"
-
 #include <cmath>
+#include <constants.h>
+#include <misc.h>
 #include <random>
+#include <vec3.h>
 
 double random_double()
 {

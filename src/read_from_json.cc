@@ -1,35 +1,38 @@
-#include "read_from_json.h"
-
-#include "camera.h"
-#include "hittable_list.h"
-#include "instances/rotate.h"
-#include "instances/scale.h"
-#include "instances/translate.h"
-#include "material.h"
-#include "materials/dielectric.h"
-#include "materials/diffuse_light.h"
-#include "materials/lambertian.h"
-#include "materials/metal.h"
-#include "misc.h"
-#include "moving.h"
-#include "primitives/aarect.h"
-#include "primitives/box.h"
-#include "primitives/sphere.h"
-#include "primitives/triangle.h"
-#include "texture.h"
-#include "textures/checker_texture.h"
-#include "textures/image_texture.h"
-#include "textures/noise_texture.h"
-#include "textures/solid_color.h"
-
+#include <camera.h>
+#include <ext/nlohmann/json.hpp>
 #include <fstream>
 #include <functional>
+#include <hittable_list.h>
+#include <initializer_list>
+#include <instances/rotate.h>
+#include <instances/scale.h>
+#include <instances/translate.h>
 #include <libgen.h>
+#include <materials/dielectric.h>
+#include <materials/diffuse_light.h>
+#include <materials/lambertian.h>
+#include <materials/metal.h>
 #include <memory>
-#include <nlohmann/json.hpp>
+#include <misc.h>
+#include <moving.h>
+#include <primitives/quad.h>
+#include <primitives/sphere.h>
+#include <primitives/triangle.h>
+#include <read_from_json.h>
 #include <stdexcept>
+#include <stdlib.h>
+#include <string.h>
 #include <string>
+#include <textures/checker_texture.h>
+#include <textures/image_texture.h>
+#include <textures/noise_texture.h>
+#include <textures/solid_color.h>
 #include <unistd.h>
+#include <vec3.h>
+#include <vector>
+
+class hittable;
+class material;
 
 using json = nlohmann::json;
 
@@ -99,30 +102,59 @@ static std::shared_ptr<material> parse_material(json const& j)
         throw std::invalid_argument("Invalid material");
 }
 
+static std::shared_ptr<hittable> parse_transformation(std::shared_ptr<hittable> obj, json const& j)
+{
+    if (j.size() != 1)
+        throw std::invalid_argument("Invalid transform");
+    if (j.contains("translate")) {
+        auto offset = j["translate"];
+        return std::make_shared<translate>(obj, vec3(offset[0], offset[1], offset[2]));
+    } else if (j.contains("xRotation"))
+        return std::make_shared<rotate_x>(obj, deg_to_rad(j["xRotation"]));
+    else if (j.contains("yRotation"))
+        return std::make_shared<rotate_y>(obj, deg_to_rad(j["yRotation"]));
+    else if (j.contains("zRotation"))
+        return std::make_shared<rotate_z>(obj, deg_to_rad(j["zRotation"]));
+    else if (j.contains("scale")) {
+        auto sc = j["scale"];
+        return std::make_shared<scale>(obj, vec3(sc[0], sc[1], sc[2]));
+    } else
+        throw std::invalid_argument("Invalid transform");
+}
+
 static std::shared_ptr<hittable> parse_object(json const& j)
 {
-    std::shared_ptr<material> mat = parse_material(j["material"]);
+    std::shared_ptr<hittable> ret;
 
     if (j["type"] == "sphere") {
         auto pos = j["position"];
-        return std::make_shared<sphere>(pos3(pos[0], pos[1], pos[2]), j["radius"], mat);
-    } else if (j["type"] == "xy_rect")
-        return std::make_shared<xy_rect>(j["x0"], j["y0"], j["x1"], j["y1"], j["z"], mat);
-    else if (j["type"] == "yz_rect")
-        return std::make_shared<yz_rect>(j["y0"], j["z0"], j["y1"], j["z1"], j["x"], mat);
-    else if (j["type"] == "zx_rect")
-        return std::make_shared<zx_rect>(j["z0"], j["x0"], j["z1"], j["x1"], j["y"], mat);
-    else if (j["type"] == "triangle") {
+        std::shared_ptr<material> mat = parse_material(j["material"]);
+        ret = std::make_shared<sphere>(pos3(pos[0], pos[1], pos[2]), j["radius"], mat);
+    } else if (j["type"] == "quad") {
+        auto pos = j["position"];
+        auto u = j["u"];
+        auto v = j["v"];
+        std::shared_ptr<material> mat = parse_material(j["material"]);
+        ret = std::make_shared<quad>(pos3(pos[0], pos[1], pos[2]), vec3(u[0], u[1], u[2]), vec3(v[0], v[1], v[2]), mat);
+    } else if (j["type"] == "triangle") {
         auto v1 = j["v1"];
         auto v2 = j["v2"];
         auto v3 = j["v3"];
-        return std::make_shared<triangle>(pos3(v1[0], v1[1], v1[2]), pos3(v2[0], v2[1], v2[2]), pos3(v3[0], v3[1], v3[2]), mat);
-    } else if (j["type"] == "box") {
-        auto p0 = j["p0"];
-        auto p1 = j["p1"];
-        return std::make_shared<box>(pos3(p0[0], p0[1], p0[2]), pos3(p1[0], p1[1], p1[2]), mat);
+        std::shared_ptr<material> mat = parse_material(j["material"]);
+        ret = std::make_shared<triangle>(pos3(v1[0], v1[1], v1[2]), pos3(v2[0], v2[1], v2[2]), pos3(v3[0], v3[1], v3[2]), mat);
+    } else if (j["type"] == "composite") {
+        std::shared_ptr<hittable_list> h = std::make_shared<hittable_list>();
+        for (auto const& j_obj : j["objects"])
+            h->add(parse_object(j_obj));
+        ret = h;
     } else
         throw std::invalid_argument("Invalid object");
+
+    if (j.contains("transformation"))
+        for (json const& j_transform : j["transformation"])
+            ret = parse_transformation(ret, j_transform);
+
+    return ret;
 }
 
 static std::function<pos3(double)> parse_path(json const& j)
@@ -142,26 +174,6 @@ static std::function<pos3(double)> parse_path(json const& j)
         throw std::invalid_argument("Invalid path");
 }
 
-static void parse_transformation(std::shared_ptr<hittable>& obj, json const& j)
-{
-    if (j.size() != 1)
-        throw std::invalid_argument("Invalid transform");
-    if (j.contains("translate")) {
-        auto offset = j["translate"];
-        obj = std::make_shared<translate>(obj, vec3(offset[0], offset[1], offset[2]));
-    } else if (j.contains("xRotation"))
-        obj = std::make_shared<rotate_x>(obj, deg_to_rad(j["xRotation"]));
-    else if (j.contains("yRotation"))
-        obj = std::make_shared<rotate_y>(obj, deg_to_rad(j["yRotation"]));
-    else if (j.contains("zRotation"))
-        obj = std::make_shared<rotate_z>(obj, deg_to_rad(j["zRotation"]));
-    else if (j.contains("scale")) {
-        auto sc = j["scale"];
-        obj = std::make_shared<scale>(obj, vec3(sc[0], sc[1], sc[2]));
-    } else
-        throw std::invalid_argument("Invalid transform");
-}
-
 std::shared_ptr<camera> read_from_json(char const* filename, metadata& m, hittable_list& world)
 {
     dir = get_json_dir(filename);
@@ -175,10 +187,6 @@ std::shared_ptr<camera> read_from_json(char const* filename, metadata& m, hittab
 
         for (auto const& z : world_spec["objects"]) {
             std::shared_ptr<hittable> obj = parse_object(z);
-            if (z.contains("transformation")) {
-                for (json const& j : z["transformation"])
-                    parse_transformation(obj, j);
-            }
             if (z.contains("path"))
                 obj = std::make_shared<moving>(obj, parse_path(z["path"]));
             world.add(obj);

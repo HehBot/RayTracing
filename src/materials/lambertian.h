@@ -1,12 +1,13 @@
 #ifndef MATERIALS_LAMBERTIAN_H
 #define MATERIALS_LAMBERTIAN_H
 
-#include "../hittable.h"
-#include "../ray.h"
-#include "../texture.h"
-#include "../vec3.h"
-
+#include <material.h>
 #include <memory>
+#include <vec3.h>
+
+struct hit_record;
+class ray;
+class texture;
 
 class lambertian : public material {
 public:

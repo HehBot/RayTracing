@@ -1,11 +1,9 @@
 #include "image_texture.h"
 
-#include "../misc.h"
-#include "../texture.h"
-#include "../vec3.h"
-
+#include <ext/stb/stb_image.h>
 #include <iostream>
-#include <stb/stb_image.h>
+#include <misc.h>
+#include <vec3.h>
 
 image_texture::image_texture(char const* path)
 {

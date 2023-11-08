@@ -1,12 +1,12 @@
 #ifndef HITTABLE_H
 #define HITTABLE_H
 
-#include "aabb.h"
-#include "material.h"
-#include "ray.h"
-#include "vec3.h"
-
+#include <aabb.h>
+#include <interval.h>
+#include <material.h>
 #include <memory>
+#include <ray.h>
+#include <vec3.h>
 
 class material;
 
@@ -36,8 +36,8 @@ public:
         : position(p)
     {
     }
-    virtual bool hit(ray const& r, double t_min, double t_max, hit_record& rec) const = 0;
-    virtual bool bounding_box(double time0, double time1, aabb& output_box) const = 0;
+    virtual bool hit(ray const& r, interval ray_t, hit_record& rec) const = 0;
+    virtual aabb bounding_box(double time0, double time1) const = 0;
 };
 
 #endif // HITTABLE_H

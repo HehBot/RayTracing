@@ -1,7 +1,6 @@
 #include "solid_color.h"
 
-#include "../texture.h"
-#include "../vec3.h"
+#include <vec3.h>
 
 solid_color::solid_color(color const& c)
     : c(c)

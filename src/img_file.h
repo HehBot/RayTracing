@@ -1,8 +1,7 @@
 #ifndef IMG_FILE_H
 #define IMG_FILE_H
 
-#include "vec3.h"
-
+#include <vec3.h>
 #include <vector>
 
 enum class img_format {

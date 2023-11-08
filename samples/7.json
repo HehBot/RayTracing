@@ -3,17 +3,27 @@
         "width": 600,
         "aspect_ratio": 1.0,
         "samples_per_pixel": 200,
-        "max_depth": 50
+        "max_depth": 20
     },
     "world": {
         "objects": [
             {
-                "type": "yz_rect",
-                "y0": 0.0,
-                "z0": 0.0,
-                "y1": 555.0,
-                "z1": 555.0,
-                "x": 555.0,
+                "type": "quad",
+                "position": [
+                    555.0,
+                    0.0,
+                    0.0
+                ],
+                "u": [
+                    0.0,
+                    555.0,
+                    0.0
+                ],
+                "v": [
+                    0.0,
+                    0.0,
+                    555.0
+                ],
                 "material" : {
                     "type": "lambertian",
                     "albedo": {
@@ -27,12 +37,22 @@
                 }
             },
             {
-                "type": "yz_rect",
-                "y0": 0.0,
-                "z0": 0.0,
-                "y1": 555.0,
-                "z1": 555.0,
-                "x": 0.0,
+                "type": "quad",
+                "position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "u": [
+                    0.0,
+                    555.0,
+                    0.0
+                ],
+                "v": [
+                    0.0,
+                    0.0,
+                    555.0
+                ],
                 "material" : {
                     "type": "lambertian",
                     "albedo": {
@@ -46,12 +66,22 @@
                 }
             },
             {
-                "type": "zx_rect",
-                "z0": 227.0,
-                "x0": 213.0,
-                "z1": 332.0,
-                "x1": 343.0,
-                "y": 554.0,
+                "type": "quad",
+                "position": [
+                    343.0,
+                    554.0,
+                    332.0
+                ],
+                "u": [
+                    -130.0,
+                    0.0,
+                    0.0
+                ],
+                "v": [
+                    0.0,
+                    0.0,
+                    -105.0
+                ],
                 "material" : {
                     "type": "diffuse_light",
                     "color": {
@@ -65,73 +95,21 @@
                 }
             },
             {
-                "type": "zx_rect",
-                "z0": 0.0,
-                "x0": 0.0,
-                "z1": 555.0,
-                "x1": 555.0,
-                "y": 0.0,
-                "material" : {
-                    "type": "lambertian",
-                    "albedo": {
-                        "type": "solid_color",
-                        "color": [
-                            0.73,
-                            0.73,
-                            0.73
-                        ]
-                    }
-                }
-            },
-            {
-                "type": "zx_rect",
-                "z0": 0.0,
-                "x0": 0.0,
-                "z1": 555.0,
-                "x1": 555.0,
-                "y": 555.0,
-                "material" : {
-                    "type": "lambertian",
-                    "albedo": {
-                        "type": "solid_color",
-                        "color": [
-                            0.73,
-                            0.73,
-                            0.73
-                        ]
-                    }
-                }
-            },
-            {
-                "type": "xy_rect",
-                "x0": 0.0,
-                "y0": 0.0,
-                "x1": 555.0,
-                "y1": 555.0,
-                "z": 555.0,
-                "material" : {
-                    "type": "lambertian",
-                    "albedo": {
-                        "type": "solid_color",
-                        "color": [
-                            0.73,
-                            0.73,
-                            0.73
-                        ]
-                    }
-                }
-            },
-            {
-                "type": "box",
-                "p0": [
+                "type": "quad",
+                "position": [
                     0.0,
                     0.0,
                     0.0
                 ],
-                "p1": [
-                    165.0,
-                    165.0,
-                    165.0
+                "u": [
+                    555.0,
+                    0.0,
+                    0.0
+                ],
+                "v": [
+                    0.0,
+                    0.0,
+                    555.0
                 ],
                 "material" : {
                     "type": "lambertian",
@@ -143,7 +121,244 @@
                             0.73
                         ]
                     }
-                },
+                }
+            },
+            {
+                "type": "quad",
+                "position": [
+                    555.0,
+                    555.0,
+                    555.0
+                ],
+                "u": [
+                    -555.0,
+                    0.0,
+                    0.0
+                ],
+                "v": [
+                    0.0,
+                    0.0,
+                    -555.0
+                ],
+                "material" : {
+                    "type": "lambertian",
+                    "albedo": {
+                        "type": "solid_color",
+                        "color": [
+                            0.73,
+                            0.73,
+                            0.73
+                        ]
+                    }
+                }
+            },
+            {
+                "type": "quad",
+                "position": [
+                    0.0,
+                    0.0,
+                    555.0
+                ],
+                "u": [
+                    555.0,
+                    0.0,
+                    0.0
+                ],
+                "v": [
+                    0.0,
+                    555.0,
+                    0.0
+                ],
+                "material" : {
+                    "type": "lambertian",
+                    "albedo": {
+                        "type": "solid_color",
+                        "color": [
+                            0.73,
+                            0.73,
+                            0.73
+                        ]
+                    }
+                }
+            },
+            {
+                "type": "composite",
+                "objects": [
+                    {
+                        "type": "quad",
+                        "position": [
+                            0.0,
+                            0.0,
+                            165.0
+                        ],
+                        "u": [
+                            165.0,
+                            0.0,
+                            0.0
+                        ],
+                        "v": [
+                            0.0,
+                            165.0,
+                            0.0
+                        ],
+                        "material" : {
+                            "type": "lambertian",
+                            "albedo": {
+                                "type": "solid_color",
+                                "color": [
+                                    0.73,
+                                    0.73,
+                                    0.73
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        "type": "quad",
+                        "position": [
+                            165.0,
+                            0.0,
+                            165.0
+                        ],
+                        "u": [
+                            0.0,
+                            0.0,
+                            -165.0
+                        ],
+                        "v": [
+                            0.0,
+                            165.0,
+                            0.0
+                        ],
+                        "material" : {
+                            "type": "lambertian",
+                            "albedo": {
+                                "type": "solid_color",
+                                "color": [
+                                    0.73,
+                                    0.73,
+                                    0.73
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        "type": "quad",
+                        "position": [
+                            165.0,
+                            0.0,
+                            0.0
+                        ],
+                        "u": [
+                            -165.0,
+                            0.0,
+                            0.0
+                        ],
+                        "v": [
+                            0.0,
+                            165.0,
+                            0.0
+                        ],
+                        "material" : {
+                            "type": "lambertian",
+                            "albedo": {
+                                "type": "solid_color",
+                                "color": [
+                                    0.73,
+                                    0.73,
+                                    0.73
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        "type": "quad",
+                        "position": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "u": [
+                            0.0,
+                            0.0,
+                            165.0
+                        ],
+                        "v": [
+                            0.0,
+                            165.0,
+                            0.0
+                        ],
+                        "material" : {
+                            "type": "lambertian",
+                            "albedo": {
+                                "type": "solid_color",
+                                "color": [
+                                    0.73,
+                                    0.73,
+                                    0.73
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        "type": "quad",
+                        "position": [
+                            0.0,
+                            165.0,
+                            165.0
+                        ],
+                        "u": [
+                            165.0,
+                            0.0,
+                            0.0
+                        ],
+                        "v": [
+                            0.0,
+                            0.0,
+                            -165.0
+                        ],
+                        "material" : {
+                            "type": "lambertian",
+                            "albedo": {
+                                "type": "solid_color",
+                                "color": [
+                                    0.73,
+                                    0.73,
+                                    0.73
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        "type": "quad",
+                        "position": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "u": [
+                            165.0,
+                            0.0,
+                            0.0
+                        ],
+                        "v": [
+                            0.0,
+                            0.0,
+                            165.0
+                        ],
+                        "material" : {
+                            "type": "lambertian",
+                            "albedo": {
+                                "type": "solid_color",
+                                "color": [
+                                    0.73,
+                                    0.73,
+                                    0.73
+                                ]
+                            }
+                        }
+                    }
+                ],
                 "transformation" : [
                     {
                         "yRotation": -18.0
@@ -158,28 +373,183 @@
                 ]
             },
             {
-                "type": "box",
-                "p0": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "p1": [
-                    165.0,
-                    330.0,
-                    165.0
-                ],
-                "material" : {
-                    "type": "lambertian",
-                    "albedo": {
-                        "type": "solid_color",
-                        "color": [
-                            0.73,
-                            0.73,
-                            0.73
-                        ]
+                "type": "composite",
+                "objects": [
+                    {
+                        "type": "quad",
+                        "position": [
+                            0.0,
+                            0.0,
+                            165.0
+                        ],
+                        "u": [
+                            165.0,
+                            0.0,
+                            0.0
+                        ],
+                        "v": [
+                            0.0,
+                            330.0,
+                            0.0
+                        ],
+                        "material" : {
+                            "type": "lambertian",
+                            "albedo": {
+                                "type": "solid_color",
+                                "color": [
+                                    0.73,
+                                    0.73,
+                                    0.73
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        "type": "quad",
+                        "position": [
+                            165.0,
+                            0.0,
+                            165.0
+                        ],
+                        "u": [
+                            0.0,
+                            0.0,
+                            -165.0
+                        ],
+                        "v": [
+                            0.0,
+                            330.0,
+                            0.0
+                        ],
+                        "material" : {
+                            "type": "lambertian",
+                            "albedo": {
+                                "type": "solid_color",
+                                "color": [
+                                    0.73,
+                                    0.73,
+                                    0.73
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        "type": "quad",
+                        "position": [
+                            165.0,
+                            0.0,
+                            0.0
+                        ],
+                        "u": [
+                            -165.0,
+                            0.0,
+                            0.0
+                        ],
+                        "v": [
+                            0.0,
+                            330.0,
+                            0.0
+                        ],
+                        "material" : {
+                            "type": "lambertian",
+                            "albedo": {
+                                "type": "solid_color",
+                                "color": [
+                                    0.73,
+                                    0.73,
+                                    0.73
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        "type": "quad",
+                        "position": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "u": [
+                            0.0,
+                            0.0,
+                            165.0
+                        ],
+                        "v": [
+                            0.0,
+                            330.0,
+                            0.0
+                        ],
+                        "material" : {
+                            "type": "lambertian",
+                            "albedo": {
+                                "type": "solid_color",
+                                "color": [
+                                    0.73,
+                                    0.73,
+                                    0.73
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        "type": "quad",
+                        "position": [
+                            0.0,
+                            330.0,
+                            165.0
+                        ],
+                        "u": [
+                            165.0,
+                            0.0,
+                            0.0
+                        ],
+                        "v": [
+                            0.0,
+                            0.0,
+                            -165.0
+                        ],
+                        "material" : {
+                            "type": "lambertian",
+                            "albedo": {
+                                "type": "solid_color",
+                                "color": [
+                                    0.73,
+                                    0.73,
+                                    0.73
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        "type": "quad",
+                        "position": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "u": [
+                            165.0,
+                            0.0,
+                            0.0
+                        ],
+                        "v": [
+                            0.0,
+                            0.0,
+                            165.0
+                        ],
+                        "material" : {
+                            "type": "lambertian",
+                            "albedo": {
+                                "type": "solid_color",
+                                "color": [
+                                    0.73,
+                                    0.73,
+                                    0.73
+                                ]
+                            }
+                        }
                     }
-                },
+                ],
                 "transformation" : [
                     {
                         "yRotation" : 15.0

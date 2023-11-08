@@ -1,16 +1,21 @@
 #include "sphere.h"
 
-#include "../hittable.h"
-#include "../misc.h"
-#include "../ray.h"
-#include "../vec3.h"
+#include <aabb.h>
+#include <cmath>
+#include <hittable.h>
+#include <interval.h>
+#include <misc.h>
+#include <ray.h>
+#include <vec3.h>
+
+class material;
 
 sphere::sphere(pos3 const& position, double radius, std::shared_ptr<material> m)
     : hittable(position), radius(radius), mat_ptr(m)
 {
 }
 
-bool sphere::hit(ray const& r, double t_min, double t_max, hit_record& rec) const
+bool sphere::hit(ray const& r, interval ray_t, hit_record& rec) const
 {
     vec3 ac = r.origin - position;
     double A = r.direction.length_sq();
@@ -25,9 +30,9 @@ bool sphere::hit(ray const& r, double t_min, double t_max, hit_record& rec) cons
 
     double root = (-B_half - D_quarter) / A;
 
-    if (root > t_max || root < t_min) {
+    if (!ray_t.contains(root)) {
         root = (-B_half + D_quarter) / A;
-        if (root > t_max || root < t_min)
+        if (!ray_t.contains(root))
             return false;
     }
 
@@ -41,8 +46,7 @@ bool sphere::hit(ray const& r, double t_min, double t_max, hit_record& rec) cons
     return true;
 }
 
-bool sphere::bounding_box(double time0, double time1, aabb& output_box) const
+aabb sphere::bounding_box(double time0, double time1) const
 {
-    output_box = aabb(position - fabs(radius) * vec3(1.0, 1.0, 1.0), position + fabs(radius) * vec3(1.0, 1.0, 1.0));
-    return true;
+    return aabb(position - std::fabs(radius) * vec3(1.0, 1.0, 1.0), position + std::fabs(radius) * vec3(1.0, 1.0, 1.0));
 }

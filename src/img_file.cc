@@ -1,10 +1,10 @@
-#include "img_file.h"
-
-#include "vec3.h"
-
+#include <cmath>
 #include <cstdint>
 #include <fstream>
+#include <img_file.h>
 #include <stdexcept>
+#include <string>
+#include <vec3.h>
 #include <vector>
 
 void write_to_img_file(char const* filename, img_format f, int w, int h, std::vector<color> const& image)

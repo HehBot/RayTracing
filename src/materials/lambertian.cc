@@ -1,11 +1,11 @@
 #include "lambertian.h"
 
-#include "../misc.h"
-#include "../ray.h"
-#include "../texture.h"
-#include "../vec3.h"
-
+#include <hittable.h>
 #include <memory>
+#include <misc.h>
+#include <ray.h>
+#include <texture.h>
+#include <vec3.h>
 
 lambertian::lambertian(std::shared_ptr<texture> a)
     : albedo(a)

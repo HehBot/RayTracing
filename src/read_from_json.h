@@ -1,11 +1,11 @@
 #ifndef READ_FROM_JSON_H
 #define READ_FROM_JSON_H
 
-#include "camera.h"
-#include "hittable_list.h"
-#include "texture.h"
-
 #include <memory>
+
+class camera;
+class hittable_list;
+class texture;
 
 struct metadata {
     int width, height;

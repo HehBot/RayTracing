@@ -1,8 +1,12 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
-#include "misc.h"
-#include "ray.h"
+#include <hittable.h>
+#include <ray.h>
+#include <vec3.h>
+#include <vector>
+
+struct metadata;
 
 class camera {
     pos3 const focus;
@@ -13,10 +17,13 @@ class camera {
     vec3 u, v, w;
     double const lens_radius;
 
+    ray get_ray(double u, double v) const;
+
 public:
     double const time0, time1;
     camera(pos3 lookfrom, pos3 lookat, vec3 vup, double vfov, double aspect, double aperture, double focus_dist, double t0, double t1);
-    ray get_ray(double u, double v) const;
+
+    std::vector<color> render(metadata const& m, hittable const& world);
 };
 
 #endif // CAMERA_H

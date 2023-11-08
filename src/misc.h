@@ -1,10 +1,9 @@
 #ifndef MISC_H
 #define MISC_H
 
-#include "constants.h"
-#include "vec3.h"
-
 #include <cmath>
+#include <constants.h>
+#include <vec3.h>
 
 inline double deg_to_rad(double deg)
 {

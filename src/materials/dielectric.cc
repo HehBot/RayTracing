@@ -1,10 +1,10 @@
 #include "dielectric.h"
 
-#include "../misc.h"
-#include "../ray.h"
-#include "../vec3.h"
-
 #include <cmath>
+#include <hittable.h>
+#include <misc.h>
+#include <ray.h>
+#include <vec3.h>
 
 dielectric::dielectric(double ir)
     : ir(ir)
