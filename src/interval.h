@@ -1,6 +1,7 @@
 #ifndef INTERVAL_H
 #define INTERVAL_H
 
+#include <algorithm>
 #include <cmath>
 #include <constants.h>
 

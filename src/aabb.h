@@ -54,6 +54,11 @@ public:
         return x;
     }
 
+    inline double surface_area() const
+    {
+        return 2 * ((x.size() + z.size()) * y.size() + z.size() * x.size());
+    }
+
     bool hit(ray const& r, interval ray_t) const;
 };
 
