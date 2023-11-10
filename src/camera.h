@@ -1,11 +1,11 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
-#include <hittable.h>
 #include <ray.h>
 #include <vec3.h>
 #include <vector>
 
+class hittable;
 struct metadata;
 
 class camera {
@@ -20,8 +20,7 @@ class camera {
     ray get_ray(double u, double v) const;
 
 public:
-    double const time0, time1;
-    camera(pos3 lookfrom, pos3 lookat, vec3 vup, double vfov, double aspect, double aperture, double focus_dist, double t0, double t1);
+    camera(pos3 lookfrom, pos3 lookat, vec3 vup, double vfov, double aspect, double aperture, double focus_dist);
 
     std::vector<color> render(metadata const& m, hittable const& world);
 };

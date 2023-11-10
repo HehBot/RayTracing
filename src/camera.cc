@@ -1,8 +1,10 @@
+#include <algorithm>
 #include <camera.h>
 #include <chrono>
 #include <cmath>
 #include <constants.h>
 #include <hittable.h>
+#include <interval.h>
 #include <iostream>
 #include <material.h>
 #include <memory>
@@ -14,8 +16,8 @@
 #include <thread>
 #include <vec3.h>
 
-camera::camera(pos3 lookfrom, pos3 lookat, vec3 vup, double vfov, double aspect, double aperture, double focus_dist, double time0, double time1)
-    : focus(lookfrom), lens_radius(aperture / 2.0), time0(time0), time1(time1)
+camera::camera(pos3 lookfrom, pos3 lookat, vec3 vup, double vfov, double aspect, double aperture, double focus_dist)
+    : focus(lookfrom), lens_radius(aperture / 2.0)
 {
     double theta = deg_to_rad(vfov);
     double viewport_height = 2 * std::tan(theta / 2);
@@ -36,7 +38,7 @@ ray camera::get_ray(double s, double t) const
 {
     vec3 rd = lens_radius * random_vec_in_disc();
     vec3 offset = u * rd.x + v * rd.y;
-    return ray(focus + offset, lower_left + s * horizontal + t * vertical - focus - offset, random_double(time0, time1));
+    return ray(focus + offset, lower_left + s * horizontal + t * vertical - focus - offset, random_double(0.0, 1.0));
 }
 
 static color ray_color(ray const& r, hittable const& world, std::shared_ptr<texture> background, int depth)
@@ -63,12 +65,12 @@ static color ray_color(ray const& r, hittable const& world, std::shared_ptr<text
 
 std::vector<color> camera::render(metadata const& m, hittable const& world)
 {
-    std::vector<color> image(m.width * m.height, { 0.0, 0.0, 0.0 });
+    std::vector<color> image(m.width * m.height);
 
     std::vector<std::thread> threads;
     int const N = std::thread::hardware_concurrency();
 
-    auto job = [&](int const tid) {
+    auto job = [m, N, this, &image, &world](int const tid) {
         for (int c = tid; c < m.height * m.width; c += N) {
             int i = c % m.width;
             int j = c / m.width;

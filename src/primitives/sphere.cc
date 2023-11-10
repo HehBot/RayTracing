@@ -11,7 +11,7 @@
 class material;
 
 sphere::sphere(pos3 const& position, double radius, std::shared_ptr<material> m)
-    : hittable(position), radius(radius), mat_ptr(m), bbox(position - std::fabs(radius) * vec3(1.0, 1.0, 1.0), position + std::fabs(radius) * vec3(1.0, 1.0, 1.0))
+    : position(position), radius(radius), mat_ptr(m), bbox(position - std::fabs(radius) * vec3(1.0, 1.0, 1.0), position + std::fabs(radius) * vec3(1.0, 1.0, 1.0))
 {
 }
 
@@ -46,7 +46,7 @@ bool sphere::hit(ray const& r, interval ray_t, hit_record& rec) const
     return true;
 }
 
-aabb sphere::bounding_box(double time0, double time1) const
+aabb sphere::bounding_box() const
 {
     return bbox;
 }

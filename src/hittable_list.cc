@@ -1,17 +1,16 @@
 #include <aabb.h>
+#include <algorithm>
 #include <hittable.h>
 #include <hittable_list.h>
+#include <interval.h>
 #include <memory>
 
 class ray;
 
-void hittable_list::clear()
-{
-    list.clear();
-}
 void hittable_list::add(std::shared_ptr<hittable> o)
 {
     list.push_back(o);
+    bbox = aabb(bbox, o->bounding_box());
 }
 
 bool hittable_list::hit(ray const& r, interval ray_t, hit_record& rec) const
@@ -30,10 +29,7 @@ bool hittable_list::hit(ray const& r, interval ray_t, hit_record& rec) const
 
     return any_hit;
 }
-aabb hittable_list::bounding_box(double time0, double time1) const
+aabb hittable_list::bounding_box() const
 {
-    aabb bbox;
-    for (auto const& o : list)
-        bbox = aabb(bbox, o->bounding_box(time0, time1));
     return bbox;
 }

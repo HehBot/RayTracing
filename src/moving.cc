@@ -3,13 +3,19 @@
 #include <cstddef>
 #include <functional>
 #include <hittable.h>
+#include <interval.h>
 #include <moving.h>
 #include <ray.h>
 #include <vec3.h>
 
 moving::moving(std::shared_ptr<hittable> p, std::function<pos3(double)> path_func)
-    : hittable(p->position), ptr(p), path(path_func)
+    : ptr(p), path(path_func)
 {
+    bbox = ptr->bounding_box();
+    std::size_t constexpr z = 10;
+    double d = std::fmax((1.0 - 0.0) / z, 0.1);
+    for (double t = 0.0; t <= 1.0; t += d)
+        bbox = aabb(bbox, bbox.offset(path(t)));
 }
 
 bool moving::hit(ray const& r, interval ray_t, hit_record& rec) const
@@ -23,12 +29,7 @@ bool moving::hit(ray const& r, interval ray_t, hit_record& rec) const
     return true;
 }
 // TODO fix this janky implementation
-aabb moving::bounding_box(double time0, double time1) const
+aabb moving::bounding_box() const
 {
-    aabb bbox = ptr->bounding_box(time0, time1);
-    std::size_t constexpr z = 10;
-    double d = std::fmax((time1 - time0) / z, 0.1);
-    for (double t = time0; t <= time1; t += d)
-        bbox = aabb(bbox, bbox.offset(path(t)));
     return bbox;
 }

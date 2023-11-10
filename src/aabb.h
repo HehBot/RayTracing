@@ -2,6 +2,7 @@
 #define AABB_H
 
 #include <cmath>
+#include <cstddef>
 #include <interval.h>
 #include <vec3.h>
 
@@ -45,13 +46,22 @@ public:
         return aabb(new_x, new_y, new_z);
     }
 
-    interval const& axis(int n) const
+    interval const& axis(std::size_t n) const
     {
         if (n == 1)
             return y;
         else if (n == 2)
             return z;
         return x;
+    }
+    std::size_t major_axis() const
+    {
+        std::size_t a = 0;
+        if (y.size() > x.size())
+            a = 1;
+        if (z.size() > axis(a).size())
+            a = 2;
+        return a;
     }
 
     inline double surface_area() const

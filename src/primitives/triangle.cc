@@ -3,7 +3,6 @@
 #include <aabb.h>
 #include <cmath>
 #include <constants.h>
-#include <cstddef>
 #include <hittable.h>
 #include <interval.h>
 #include <ray.h>
@@ -44,7 +43,7 @@ bool triangle::hit(ray const& r, interval ray_t, hit_record& rec) const
     return true;
 }
 
-aabb triangle::bounding_box(double time0, double time1) const
+aabb triangle::bounding_box() const
 {
     return bbox;
 }

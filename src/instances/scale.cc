@@ -4,10 +4,10 @@
 #include <constants.h>
 #include <cstddef>
 #include <hittable.h>
+#include <interval.h>
 #include <memory>
 #include <ray.h>
 #include <stdexcept>
-#include <utility>
 #include <vec3.h>
 
 scale::scale(std::shared_ptr<hittable> ptr, vec3 const& m)
@@ -16,6 +16,7 @@ scale::scale(std::shared_ptr<hittable> ptr, vec3 const& m)
     for (std::size_t i = 0; i < 3; ++i)
         if (m[i] < epsilon && m[i] > -epsilon)
             throw std::invalid_argument("Invalid scaling transformation");
+    bbox = ptr->bounding_box().scale(m);
 }
 bool scale::hit(ray const& r, interval ray_t, hit_record& rec) const
 {
@@ -28,7 +29,7 @@ bool scale::hit(ray const& r, interval ray_t, hit_record& rec) const
     rec.set_face_normal(r, rec.normal);
     return true;
 }
-aabb scale::bounding_box(double time0, double time1) const
+aabb scale::bounding_box() const
 {
-    return ptr->bounding_box(time0, time1).scale(m);
+    return bbox;
 }

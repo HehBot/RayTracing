@@ -1,6 +1,6 @@
 #include <aabb.h>
-#include <cmath>
 #include <cstddef>
+#include <interval.h>
 #include <ray.h>
 #include <utility>
 #include <vec3.h>

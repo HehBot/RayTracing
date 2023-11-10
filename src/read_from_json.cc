@@ -195,5 +195,5 @@ std::shared_ptr<camera> read_from_json(char const* filename, metadata& m, hittab
 
     json& camera_spec = scene_spec["camera"];
     auto look_from = camera_spec["look_from"], look_at = camera_spec["look_at"], vup = camera_spec["vup"];
-    return std::make_shared<camera>(pos3(look_from[0], look_from[1], look_from[2]), pos3(look_at[0], look_at[1], look_at[2]), vec3(vup[0], vup[1], vup[2]), camera_spec["fov"], m.aspect_ratio, camera_spec["aperture"], camera_spec["focal_distance"], 0, 1);
+    return std::make_shared<camera>(pos3(look_from[0], look_from[1], look_from[2]), pos3(look_at[0], look_at[1], look_at[2]), vec3(vup[0], vup[1], vup[2]), camera_spec["fov"], m.aspect_ratio, camera_spec["aperture"], camera_spec["focal_distance"]);
 }

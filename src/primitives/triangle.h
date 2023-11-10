@@ -3,10 +3,10 @@
 
 #include <aabb.h>
 #include <hittable.h>
-#include <interval.h>
 #include <memory>
 #include <vec3.h>
 
+class interval;
 class material;
 class ray;
 
@@ -19,7 +19,7 @@ public:
     triangle(pos3 const& v1, pos3 const& v2, pos3 const& v3, std::shared_ptr<material> m);
 
     virtual bool hit(ray const& r, interval ray_t, hit_record& rec) const override;
-    virtual aabb bounding_box(double time0, double time1) const override;
+    virtual aabb bounding_box() const override;
 };
 
 #endif // PRIMITIVES_TRIANGLE_H

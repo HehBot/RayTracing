@@ -27,17 +27,8 @@ struct hit_record {
 
 class hittable {
 public:
-    pos3 const position;
-    hittable()
-        : position(0.0, 0.0, 0.0)
-    {
-    }
-    hittable(pos3 p)
-        : position(p)
-    {
-    }
     virtual bool hit(ray const& r, interval ray_t, hit_record& rec) const = 0;
-    virtual aabb bounding_box(double time0, double time1) const = 0;
+    virtual aabb bounding_box() const = 0;
 };
 
 #endif // HITTABLE_H

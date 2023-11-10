@@ -2,6 +2,7 @@
 
 #include <aabb.h>
 #include <hittable.h>
+#include <interval.h>
 #include <memory>
 #include <ray.h>
 #include <vec3.h>
@@ -9,6 +10,7 @@
 translate::translate(std::shared_ptr<hittable> p, vec3 const& displacement)
     : ptr(p), offset(displacement)
 {
+    bbox = ptr->bounding_box().offset(offset);
 }
 bool translate::hit(ray const& r, interval ray_t, hit_record& rec) const
 {
@@ -20,7 +22,7 @@ bool translate::hit(ray const& r, interval ray_t, hit_record& rec) const
     rec.set_face_normal(r, rec.normal);
     return true;
 }
-aabb translate::bounding_box(double time0, double time1) const
+aabb translate::bounding_box() const
 {
-    return ptr->bounding_box(time0, time1).offset(offset);
+    return bbox;
 }
