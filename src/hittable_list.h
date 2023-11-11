@@ -15,6 +15,7 @@ class hittable_list : public hittable {
 
 public:
     hittable_list() = default;
+    hittable_list(std::vector<std::shared_ptr<hittable>> const& list);
 
     void add(std::shared_ptr<hittable> o);
 

@@ -17,9 +17,11 @@ void write_to_img_file(char const* filename, img_format f, int w, int h, std::ve
         std::vector<uint8_t> pixels(3 * w * h, 0);
         for (int j = 0; j < h; ++j) {
             for (int i = 0; i < w; ++i) {
-                pixels[3 * (w * j + i)] = (uint8_t)(255.999 * clamp(std::sqrt(image[w * (h - 1 - j) + i].x), 0.0, 1.0));
-                pixels[3 * (w * j + i) + 1] = (uint8_t)(255.999 * clamp(std::sqrt(image[w * (h - 1 - j) + i].y), 0.0, 1.0));
-                pixels[3 * (w * j + i) + 2] = (uint8_t)(255.999 * clamp(std::sqrt(image[w * (h - 1 - j) + i].z), 0.0, 1.0));
+                int px = 3 * (w * j + i);
+                color c = image[w * (h - 1 - j) + i];
+                pixels[px] = (uint8_t)(255.999 * clamp(std::sqrt(c.x), 0.0, 1.0));
+                pixels[px + 1] = (uint8_t)(255.999 * clamp(std::sqrt(c.y), 0.0, 1.0));
+                pixels[px + 2] = (uint8_t)(255.999 * clamp(std::sqrt(c.z), 0.0, 1.0));
             }
         }
         std::ofstream output_file(filename, std::ios::binary);

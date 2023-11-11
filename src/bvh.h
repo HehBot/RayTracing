@@ -30,7 +30,7 @@ public:
             return false;
 
         bool hit_left = left->hit(r, ray_t, rec);
-        bool hit_right = right->hit(r, (hit_left ? interval(ray_t.min, rec.t) : ray_t), rec);
+        bool hit_right = right && right->hit(r, (hit_left ? interval(ray_t.min, rec.t) : ray_t), rec);
         return hit_left || hit_right;
     }
     virtual aabb bounding_box() const override

@@ -92,7 +92,7 @@ std::vector<color> camera::render(metadata const& m, hittable const& world)
         th.join();
 
     auto t2 = std::chrono::high_resolution_clock::now();
-    std::cerr << "Done, time taken = " << std::chrono::duration<double, std::milli>(t2 - t1).count() / 1000.0 << " s using " << N << " threads\n";
+    std::cerr << "Time taken for render = " << std::chrono::duration<double, std::milli>(t2 - t1).count() / 1000.0 << " s using " << N << " threads\n";
 
     return image;
 }

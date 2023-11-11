@@ -7,6 +7,13 @@
 
 class ray;
 
+hittable_list::hittable_list(std::vector<std::shared_ptr<hittable>> const& list)
+    : list(list)
+{
+    for (auto o : list)
+        bbox = aabb(bbox, o->bounding_box());
+}
+
 void hittable_list::add(std::shared_ptr<hittable> o)
 {
     list.push_back(o);
