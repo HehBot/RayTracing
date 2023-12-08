@@ -8,7 +8,6 @@
 #include <instances/rotate.h>
 #include <instances/scale.h>
 #include <instances/translate.h>
-#include <iostream>
 #include <libgen.h>
 #include <materials/dielectric.h>
 #include <materials/diffuse_light.h>

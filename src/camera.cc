@@ -1,6 +1,5 @@
 #include <algorithm>
 #include <camera.h>
-#include <chrono>
 #include <cmath>
 #include <constants.h>
 #include <hittable.h>
@@ -14,6 +13,7 @@
 #include <read_from_json.h>
 #include <texture.h>
 #include <thread>
+#include <util/progress_bar.h>
 #include <vec3.h>
 
 camera::camera(int pixel_width, int pixel_height, int samples_per_pixel, int max_depth, std::shared_ptr<texture> background, pos3 lookfrom, pos3 lookat, vec3 vup, double vfov, double aperture, double focus_dist)
@@ -92,29 +92,25 @@ std::vector<color> camera::render(hittable const& world) const
     std::vector<std::thread> threads;
     int const N = std::thread::hardware_concurrency();
 
-    auto job = [N, this, &image, &world](int const tid) {
+    progress_bar p_bar(50, pixel_width * pixel_height, 1.0);
+
+    auto job = [N, this, &image, &world, &p_bar](int const tid) {
         for (int c = tid; c < pixel_height * pixel_width; c += N) {
             int i = c % pixel_width;
             int j = c / pixel_width;
             color accumulator(0.0, 0.0, 0.0);
-            for (int si = 0; si < sqrt_spp; ++si) {
-                for (int sj = 0; sj < sqrt_spp; ++sj) {
+            for (int si = 0; si < sqrt_spp; ++si)
+                for (int sj = 0; sj < sqrt_spp; ++sj)
                     accumulator += ray_color(get_ray(i, j, si, sj), world, background, max_depth);
-                }
-            }
             image[c] = accumulator / samples_per_pixel;
+            p_bar.update();
         }
     };
-
-    auto t1 = std::chrono::high_resolution_clock::now();
 
     for (int i = 0; i < N; ++i)
         threads.emplace_back(job, i);
     for (auto& th : threads)
         th.join();
-
-    auto t2 = std::chrono::high_resolution_clock::now();
-    std::cerr << "Time taken for render = " << std::chrono::duration<double, std::milli>(t2 - t1).count() / 1000.0 << " s using " << N << " threads\n";
 
     return image;
 }
