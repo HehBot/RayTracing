@@ -1,6 +1,6 @@
 {
     "image": {
-        "width": 600,
+        "pixel_width": 600,
         "aspect_ratio": 1.0,
         "samples_per_pixel": 200,
         "max_depth": 20

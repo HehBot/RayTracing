@@ -49,25 +49,6 @@ std::string get_json_dir(char const* json_filename)
     return dir;
 }
 
-static void parse_metadata(json const& j, metadata& m)
-{
-    if (!j.contains("height")) {
-        m.aspect_ratio = j["aspect_ratio"];
-        m.width = j["width"];
-        m.height = m.width / m.aspect_ratio;
-    } else if (!j.contains("width")) {
-        m.aspect_ratio = j["aspect_ratio"];
-        m.height = j["height"];
-        m.width = m.height * m.aspect_ratio;
-    } else {
-        m.height = j["height"];
-        m.width = j["width"];
-        m.aspect_ratio = m.width / 1.0 * m.height;
-    }
-    m.samples_per_pixel = j["samples_per_pixel"];
-    m.max_depth = j["max_depth"];
-}
-
 static std::shared_ptr<texture> parse_texture(json const& j)
 {
     if (j["type"] == "solid_color") {
@@ -174,26 +155,47 @@ static std::function<pos3(double)> parse_path(json const& j)
         throw std::invalid_argument("Invalid path");
 }
 
-std::shared_ptr<camera> read_from_json(char const* filename, metadata& m, hittable_list& world)
+std::shared_ptr<camera> read_from_json(char const* filename, hittable_list& world)
 {
     dir = get_json_dir(filename);
     json scene_spec = json::parse(std::ifstream(filename));
 
-    parse_metadata(scene_spec["image"], m);
+    json const& world_spec = scene_spec["world"];
+    std::shared_ptr<texture> background = parse_texture(world_spec["background"]);
 
-    {
-        json const& world_spec = scene_spec["world"];
-        m.background = parse_texture(world_spec["background"]);
-
-        for (auto const& z : world_spec["objects"]) {
-            std::shared_ptr<hittable> obj = parse_object(z);
-            if (z.contains("path"))
-                obj = std::make_shared<moving>(obj, parse_path(z["path"]));
-            world.add(obj);
-        }
+    for (auto const& z : world_spec["objects"]) {
+        std::shared_ptr<hittable> obj = parse_object(z);
+        if (z.contains("path"))
+            obj = std::make_shared<moving>(obj, parse_path(z["path"]));
+        world.add(obj);
     }
 
-    json& camera_spec = scene_spec["camera"];
-    auto look_from = camera_spec["look_from"], look_at = camera_spec["look_at"], vup = camera_spec["vup"];
-    return std::make_shared<camera>(pos3(look_from[0], look_from[1], look_from[2]), pos3(look_at[0], look_at[1], look_at[2]), vec3(vup[0], vup[1], vup[2]), camera_spec["fov"], m.aspect_ratio, camera_spec["aperture"], camera_spec["focal_distance"]);
+    json const& camera_spec = scene_spec["camera"];
+    pos3 look_from, look_at;
+    vec3 vup;
+    {
+        auto lf = camera_spec["look_from"], la = camera_spec["look_at"], vu = camera_spec["vup"];
+        look_from = pos3(lf[0], lf[1], lf[2]);
+        look_at = pos3(la[0], la[1], la[2]);
+        vup = vec3(vu[0], vu[1], vu[2]);
+    }
+
+    json const& image_spec = scene_spec["image"];
+    int pixel_width, pixel_height;
+    if (!image_spec.contains("pixel_height")) {
+        double aspect_ratio = image_spec["aspect_ratio"];
+        pixel_width = image_spec["pixel_width"];
+        pixel_height = pixel_width / aspect_ratio;
+    } else if (!image_spec.contains("pixel_width")) {
+        double aspect_ratio = image_spec["aspect_ratio"];
+        pixel_height = image_spec["pixel_height"];
+        pixel_width = pixel_height * aspect_ratio;
+    } else {
+        pixel_height = image_spec["pixel_height"];
+        pixel_width = image_spec["pixel_width"];
+    }
+    int samples_per_pixel = image_spec["samples_per_pixel"];
+    int max_depth = image_spec["max_depth"];
+
+    return std::make_shared<camera>(pixel_width, pixel_height, samples_per_pixel, max_depth, background, look_from, look_at, vup, camera_spec["fov"], camera_spec["aperture"], camera_spec["focal_distance"]);
 }

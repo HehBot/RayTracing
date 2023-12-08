@@ -24,7 +24,7 @@
         "aspect_ratio": 1.0,
         "max_depth": 40,
         "samples_per_pixel": 250,
-        "width": 800
+        "pixel_width": 800
     },
     "world": {
         "background": {

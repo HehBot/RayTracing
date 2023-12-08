@@ -16,12 +16,12 @@
 #include <thread>
 #include <vec3.h>
 
-camera::camera(pos3 lookfrom, pos3 lookat, vec3 vup, double vfov, double aspect, double aperture, double focus_dist)
-    : focus(lookfrom), lens_radius(aperture / 2.0)
+camera::camera(int pixel_width, int pixel_height, int samples_per_pixel, int max_depth, std::shared_ptr<texture> background, pos3 lookfrom, pos3 lookat, vec3 vup, double vfov, double aperture, double focus_dist)
+    : pixel_width(pixel_width), pixel_height(pixel_height), samples_per_pixel(samples_per_pixel), max_depth(max_depth), background(background), focus(lookfrom), lens_radius(aperture / 2.0)
 {
     double theta = deg_to_rad(vfov);
     double viewport_height = 2 * std::tan(theta / 2);
-    double viewport_width = aspect * viewport_height;
+    double viewport_width = (pixel_width * viewport_height) / pixel_height;
 
     w = (lookfrom - lookat).unit_vec();
     u = cross(vup, w);
@@ -32,13 +32,33 @@ camera::camera(pos3 lookfrom, pos3 lookat, vec3 vup, double vfov, double aspect,
 
     horizontal = focus_dist * viewport_width * u;
     vertical = focus_dist * viewport_height * v;
-    lower_left = focus - horizontal / 2.0 - vertical / 2.0 - focus_dist * w;
+    pos3 viewport_lower_left = focus - (horizontal + vertical) * 0.5 - focus_dist * w;
+
+    pixel_delta_u = horizontal / pixel_width;
+    pixel_delta_v = vertical / pixel_height;
+    pixel_00_centre = viewport_lower_left + 0.5 * (pixel_delta_u + pixel_delta_v);
+
+    sqrt_spp = std::sqrt(samples_per_pixel);
+    inv_sqrt_spp = 1.0 / sqrt_spp;
 }
-ray camera::get_ray(double s, double t) const
+ray camera::get_ray(int i, int j, int si, int sj) const
 {
     vec3 rd = lens_radius * random_vec_in_disc();
-    vec3 offset = u * rd.x + v * rd.y;
-    return ray(focus + offset, lower_left + s * horizontal + t * vertical - focus - offset, random_double(0.0, 1.0));
+    vec3 offset = i * pixel_delta_u * rd.x + j * pixel_delta_v * rd.y;
+
+    pos3 pixel_centre = pixel_00_centre + (i * pixel_delta_u + j * pixel_delta_v);
+
+    auto px = -0.5 + (si + random_double()) * inv_sqrt_spp;
+    auto py = -0.5 + (sj + random_double()) * inv_sqrt_spp;
+    vec3 strat_offset = (px * pixel_delta_u + py * pixel_delta_v);
+
+    pos3 pixel_sample = pixel_centre + strat_offset;
+
+    pos3 ray_origin = focus + offset;
+    pos3 ray_direction = pixel_sample - ray_origin;
+    double ray_time = random_double();
+
+    return ray(ray_origin, ray_direction, ray_time);
 }
 
 static color ray_color(ray const& r, hittable const& world, std::shared_ptr<texture> background, int depth)
@@ -55,32 +75,34 @@ static color ray_color(ray const& r, hittable const& world, std::shared_ptr<text
 
     ray scattered;
     color attenuation;
-    color emitted = rec.mat_ptr->emitted(rec.u, rec.v, rec.p);
+    color color_from_emission = rec.mat_ptr->emitted(rec.u, rec.v, rec.p);
 
     if (!rec.mat_ptr->scatter(r, rec, attenuation, scattered))
-        return emitted;
+        return color_from_emission;
 
-    return emitted + attenuation * ray_color(scattered, world, background, depth - 1);
+    color color_from_scatter = attenuation * ray_color(scattered, world, background, depth - 1);
+
+    return color_from_emission + color_from_scatter;
 }
 
-std::vector<color> camera::render(metadata const& m, hittable const& world)
+std::vector<color> camera::render(hittable const& world) const
 {
-    std::vector<color> image(m.width * m.height);
+    std::vector<color> image(pixel_width * pixel_height);
 
     std::vector<std::thread> threads;
     int const N = std::thread::hardware_concurrency();
 
-    auto job = [m, N, this, &image, &world](int const tid) {
-        for (int c = tid; c < m.height * m.width; c += N) {
-            int i = c % m.width;
-            int j = c / m.width;
+    auto job = [N, this, &image, &world](int const tid) {
+        for (int c = tid; c < pixel_height * pixel_width; c += N) {
+            int i = c % pixel_width;
+            int j = c / pixel_width;
             color accumulator(0.0, 0.0, 0.0);
-            for (int k = 0; k < m.samples_per_pixel; ++k) {
-                double u = (i + random_double()) / m.width;
-                double v = (j + random_double()) / m.height;
-                accumulator += ray_color(get_ray(u, v), world, m.background, m.max_depth);
+            for (int si = 0; si < sqrt_spp; ++si) {
+                for (int sj = 0; sj < sqrt_spp; ++sj) {
+                    accumulator += ray_color(get_ray(i, j, si, sj), world, background, max_depth);
+                }
             }
-            image[c] = accumulator / m.samples_per_pixel;
+            image[c] = accumulator / samples_per_pixel;
         }
     };
 

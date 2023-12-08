@@ -16,18 +16,17 @@ int main(int argc, char* argv[])
         return 0;
     }
 
-    metadata m;
     hittable_list world;
-    std::shared_ptr<camera> cam = read_from_json(argv[1], m, world);
+    std::shared_ptr<camera> cam = read_from_json(argv[1], world);
 
     auto t1 = std::chrono::high_resolution_clock::now();
     bvh_node W(world);
     auto t2 = std::chrono::high_resolution_clock::now();
     std::cerr << "Time taken for BVH construction = " << std::chrono::duration<double, std::milli>(t2 - t1).count() / 1000.0 << " s\n";
 
-    std::vector<color> image = cam->render(m, W);
+    std::vector<color> image = cam->render(W);
 
-    write_to_img_file(argv[2], img_format::PPM, m.width, m.height, image);
+    write_to_img_file(argv[2], img_format::PPM, cam->pixel_width, cam->pixel_height, image);
 
     return 0;
 }
