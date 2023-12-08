@@ -1,4 +1,5 @@
 #include <camera.h>
+#define JSON_DIAGNOSTICS 1
 #include <ext/nlohmann/json.hpp>
 #include <fstream>
 #include <functional>
@@ -7,6 +8,7 @@
 #include <instances/rotate.h>
 #include <instances/scale.h>
 #include <instances/translate.h>
+#include <iostream>
 #include <libgen.h>
 #include <materials/dielectric.h>
 #include <materials/diffuse_light.h>
@@ -58,11 +60,11 @@ static std::shared_ptr<texture> parse_texture(json const& j)
         std::shared_ptr<texture> e = parse_texture(j["even"]);
         std::shared_ptr<texture> o = parse_texture(j["odd"]);
         return std::make_shared<checker_texture>(e, o);
-    } else if (j["type"] == "noise_texture") {
+    } else if (j["type"] == "noise_texture")
         return std::make_shared<noise_texture>(j["scale"]);
-    } else if (j["type"] == "image_texture") {
+    else if (j["type"] == "image_texture")
         return std::make_shared<image_texture>((dir + std::string("/") + std::string(j["path"])).c_str());
-    } else
+    else
         throw std::invalid_argument("Invalid texture");
 }
 
@@ -74,9 +76,9 @@ static std::shared_ptr<material> parse_material(json const& j)
     } else if (j["type"] == "metal") {
         std::shared_ptr<texture> albedo = parse_texture(j["albedo"]);
         return std::make_shared<metal>(albedo, j["fuzz"]);
-    } else if (j["type"] == "dielectric") {
+    } else if (j["type"] == "dielectric")
         return std::make_shared<dielectric>(j["ir"]);
-    } else if (j["type"] == "diffuse_light") {
+    else if (j["type"] == "diffuse_light") {
         std::shared_ptr<texture> color = parse_texture(j["color"]);
         return std::make_shared<diffuse_light>(color);
     } else
@@ -127,6 +129,25 @@ static std::shared_ptr<hittable> parse_object(json const& j)
         std::shared_ptr<hittable_list> h = std::make_shared<hittable_list>();
         for (auto const& j_obj : j["objects"])
             h->add(parse_object(j_obj));
+        ret = h;
+    } else if (j["type"] == "stl_file") {
+        std::shared_ptr<material> mat = parse_material(j["material"]);
+        std::shared_ptr<hittable_list> h = std::make_shared<hittable_list>();
+        std::ifstream file(dir + std::string("/") + std::string(j["file_path"]), std::ios::binary);
+        file.seekg(80);
+        uint32_t nr_triangles;
+        file.read((char*)&nr_triangles, sizeof(nr_triangles));
+        for (std::size_t i = 0; i < nr_triangles; ++i) {
+            vec3 z[4];
+            for (int i = 0; i < 4; ++i) {
+                float f[3];
+                file.read((char*)&f[0], sizeof(f));
+                z[i] = vec3(f[0], f[1], f[2]);
+            }
+            // skip over attributes
+            file.seekg(2, std::ios::cur);
+            h->add(std::make_shared<triangle>(z[1], z[2], z[3], mat));
+        }
         ret = h;
     } else
         throw std::invalid_argument("Invalid object");

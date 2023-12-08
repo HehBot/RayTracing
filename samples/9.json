@@ -1,0 +1,67 @@
+{
+    "image": {
+        "pixel_width": 400,
+        "aspect_ratio": 1.7778,
+        "samples_per_pixel": 50,
+        "max_depth": 50
+    },
+    "world": {
+        "objects": [
+            {
+                "type": "stl_file",
+                "file_path": "res/Utah_teapot.stl",
+                "material": {
+                    "type": "lambertian",
+                    "albedo": {
+                        "type": "solid_color",
+                        "color": [
+                            0.5,
+                            0.5,
+                            0.5
+                        ]
+                    }
+                },
+                "transformation": [
+                    {
+                        "scale": [0.25, 0.25, 0.25]
+                    },
+                    {
+                        "zRotation": 90.0
+                    },
+                    {
+                        "xRotation": -90.0
+                    }
+                ]
+            }
+        ],
+        "background": {
+            "type": "solid_color",
+            "color": [
+                1.0,
+                1.0,
+                1.0
+            ]
+        }
+    },
+    "camera": {
+        "type": "ThinLens",
+        "look_from": [
+            -6.0,
+            6.0,
+            6.0
+        ],
+        "look_at": [
+            0.0,
+            1.0,
+            0.0
+        ],
+        "vup": [
+            0.0,
+            1.0,
+            0.0
+        ],
+        "fov": 20.0,
+        "aperture": 0.0,
+        "focal_distance": 10.0
+    }
+}
